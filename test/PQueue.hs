@@ -5,6 +5,7 @@
 module PQueue (pQueueTests) where
 
 import Prelude hiding (concatMap, min)
+import qualified Control.Applicative as Ap
 import qualified Data.Foldable as F
 import Data.Foldable (toList)
 import qualified Data.Foldable.WithIndex as IFo
@@ -71,7 +72,7 @@ pQueueTests = testGroup "Data.Seqn.PQueue"
 type EA = Entry OrdA A
 
 instance (Arbitrary k, Arbitrary a) => Arbitrary (Entry k a) where
-  arbitrary = liftA2 Entry arbitrary arbitrary
+  arbitrary = Ap.liftA2 Entry arbitrary arbitrary
   shrink (Entry k x) = uncurry Entry <$> shrink (k,x)
 
 instance (Ord a, Arbitrary a) => Arbitrary (PQueue a) where

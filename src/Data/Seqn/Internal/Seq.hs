@@ -120,7 +120,7 @@ module Data.Seqn.Internal.Seq
   , debugShowsPrec
   ) where
 
-import Prelude hiding (concatMap, break, drop, dropWhile, filter, liftA2, lookup, replicate, reverse, scanl, scanr, span, splitAt, take, takeWhile, traverse, unzip, unzip3, zip, zip3, zipWith, zipWith3)
+import Prelude hiding (concatMap, break, drop, dropWhile, filter, lookup, replicate, reverse, scanl, scanr, span, splitAt, take, takeWhile, traverse, unzip, unzip3, zip, zip3, zipWith, zipWith3)
 import qualified Control.Applicative as Ap
 import Control.Applicative.Backwards (Backwards(..))
 import Control.DeepSeq (NFData(..), NFData1(..))
