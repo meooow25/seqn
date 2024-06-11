@@ -120,7 +120,7 @@ module Data.Seqn.Internal.Seq
   , debugShowsPrec
   ) where
 
-import Prelude hiding (concatMap, break, drop, dropWhile, filter, liftA2, lookup, replicate, reverse, scanl, scanr, span, splitAt, take, takeWhile, traverse, unzip, unzip3, zip, zip3, zipWith, zipWith3)
+import Prelude hiding (concatMap, break, drop, dropWhile, filter, lookup, replicate, reverse, scanl, scanr, span, splitAt, take, takeWhile, traverse, unzip, unzip3, zip, zip3, zipWith, zipWith3)
 import qualified Control.Applicative as Ap
 import Control.Applicative.Backwards (Backwards(..))
 import Control.DeepSeq (NFData(..), NFData1(..))
@@ -850,9 +850,8 @@ tails :: Seq a -> Seq (Seq a)
 tails t0 = cons t0 (U.evalSState (Tr.traverse f t0) t0)
   where
     f _ = U.sState $ \t -> case uncons t of
-      Nothing -> U.S2 t t
-      -- ^ impossible, could have been error but
-      -- https://gitlab.haskell.org/ghc/ghc/-/issues/24806
+      Nothing -> U.S2 t t -- impossible
+      -- Could have been error but https://gitlab.haskell.org/ghc/ghc/-/issues/24806
       Just (_,t') -> U.S2 t' t'
 -- See Note [Tails implementation]
 

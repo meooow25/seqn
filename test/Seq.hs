@@ -1,4 +1,5 @@
 {-# OPTIONS_GHC -Wno-orphans #-} -- Arbitrary instances
+{-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -18,7 +19,6 @@ import qualified Data.Functor.WithIndex as IFu
 import qualified Data.List as L
 import Data.Proxy (Proxy(..))
 import Data.Semigroup (stimes)
-import Data.Tuple (Solo(..))
 import qualified Data.Traversable.WithIndex as ITr
 import Test.Tasty
 import Test.Tasty.QuickCheck hiding (generate)
@@ -54,7 +54,7 @@ seqTests = testGroup "Data.Seqn.Seq"
     , LL.mconcat @(Seq A) mconcat
     , LL.concatMap @(Seq A) concatMap
     , testProperty "mfix" $ \n ->
-        toList (mkMfix n) === fmap (MkSolo . L.replicate 10) [0 .. n-1]
+        toList (mkMfix n) === fmap (Solo . L.replicate 10) [0 .. n-1]
     , LL.read @(Seq Int)
 
       -- Convert
@@ -335,4 +335,8 @@ instance ListLike (Seq a) where
 mkMfix :: Int -> Seq (Solo [Int])
 mkMfix n =
   fmap (fmap (L.take 10))
-       (mfix (\ ~(MkSolo is) -> generate n (\i -> MkSolo (i : is))))
+       (mfix (\ ~(Solo is) -> generate n (\i -> Solo (i : is))))
+
+-- In Data.Tuple since 4.15
+data Solo a = Solo a
+  deriving (Eq, Show, Functor)
