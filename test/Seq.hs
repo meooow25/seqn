@@ -337,6 +337,6 @@ mkMfix n =
   fmap (fmap (L.take 10))
        (mfix (\ ~(Solo is) -> generate n (\i -> Solo (i : is))))
 
--- In Data.Tuple since 4.13
+-- In Data.Tuple since 4.15
 data Solo a = Solo a
   deriving (Eq, Show, Functor)
