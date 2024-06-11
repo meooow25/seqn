@@ -850,9 +850,8 @@ tails :: Seq a -> Seq (Seq a)
 tails t0 = cons t0 (U.evalSState (Tr.traverse f t0) t0)
   where
     f _ = U.sState $ \t -> case uncons t of
-      Nothing -> U.S2 t t
-      -- ^ impossible, could have been error but
-      -- https://gitlab.haskell.org/ghc/ghc/-/issues/24806
+      Nothing -> U.S2 t t -- impossible
+      -- Could have been error but https://gitlab.haskell.org/ghc/ghc/-/issues/24806
       Just (_,t') -> U.S2 t' t'
 -- See Note [Tails implementation]
 
