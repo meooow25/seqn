@@ -998,7 +998,7 @@ unzipWith3 f t = case t of
 -- | \(O(1)\). The summary is the fold of measures of all elements in the
 -- sequence. Returns @Nothing@ if the sequence is empty.
 --
--- @summaryMay == foldMap (Just . measure)@
+-- @summaryMay == 'foldMap' (Just . 'measure')@
 summaryMay :: Measured a => MSeq a -> Maybe (Measure a)
 summaryMay = \case
   MTree x xs -> Just $! measure x T.<<> xs
@@ -1007,7 +1007,7 @@ summaryMay = \case
 -- | \(O(1)\). The summary is the fold of measures of all elements in the
 -- sequence.
 --
--- @summary == foldMap measure@
+-- @summary == 'foldMap' 'measure'@
 summary :: (Measured a, Monoid (Measure a)) => MSeq a -> Measure a
 summary = \case
   MTree x xs -> measure x T.<<> xs
@@ -1029,7 +1029,7 @@ summary = \case
 -- ==== __Examples__
 --
 -- @
--- import Data.Monoid (Sum(..))
+-- import "Data.Monoid" (Sum(..))
 --
 -- newtype A = A Int deriving Show
 --
@@ -1050,20 +1050,31 @@ summary = \case
 -- >>> binarySearchPrefix (> Sum 4) xs
 -- (Just 1,Just 2)
 --
--- * @0: Sum 1 > Sum 4 = False@.
--- * @1: Sum 3 > Sum 4 = False@.
--- * @2: Sum 6 > Sum 4 = True@.
--- * @3: Sum 10 > Sum 4 = True@.
+-- @
+--                  ╭──────────┬──────────┬──────────┬──────────╮
+-- index:           │        0 │        1 │        2 │        3 │
+--                  ├──────────┼──────────┼──────────┼──────────┤
+-- prefix summary:  │    Sum 1 │    Sum 3 │    Sum 6 |   Sum 10 │
+--                  ├──────────┼──────────┼──────────┼──────────┤
+-- (> Sum 4):       │    False │    False │     True │     True │
+--                  ╰──────────┴──────────┴──────────┴──────────╯
+-- result:                       ( Just 1 ,   Just 2 )
+-- @
 --
 -- >>> binarySearchPrefix (> Sum 20) xs
 -- (Just 3,Nothing)
 --
--- * @0: Sum 1 > Sum 20 = False@.
--- * @1: Sum 3 > Sum 20 = False@.
--- * @2: Sum 6 > Sum 20 = False@.
--- * @3: Sum 10 > Sum 20 = False@.
+-- @
+--                  ╭──────────┬──────────┬──────────┬──────────╮
+-- index:           │        0 │        1 │        2 │        3 │
+--                  ├──────────┼──────────┼──────────┼──────────┤
+-- prefix summary:  │    Sum 1 │    Sum 3 │    Sum 6 |   Sum 10 │
+--                  ├──────────┼──────────┼──────────┼──────────┤
+-- (> Sum 20):      │    False │    False │    False │    False │
+--                  ╰──────────┴──────────┴──────────┴──────────╯
+-- result:                                             ( Just 3 ,  Nothing)
+-- @
 --
--- There is no index for which @(> Sum 20)@ is @True@.
 binarySearchPrefix
   :: Measured a => (Measure a -> Bool) -> MSeq a -> (Maybe Int, Maybe Int)
 binarySearchPrefix p = \case
@@ -1102,7 +1113,7 @@ binarySearchPrefix p = \case
 -- ==== __Examples__
 --
 -- @
--- import Data.Monoid (Sum(..))
+-- import "Data.Monoid" (Sum(..))
 --
 -- newtype A = A Int deriving Show
 --
@@ -1123,20 +1134,31 @@ binarySearchPrefix p = \case
 -- >>> binarySearchSuffix (> Sum 4) xs
 -- (Just 2,Just 3)
 --
--- * @0: Sum 10 > Sum 4 = True@.
--- * @1: Sum 9 > Sum 4 = True@.
--- * @2: Sum 7 > Sum 4 = True@.
--- * @3: Sum 4 > Sum 4 = False@.
+-- @
+--                  ╭──────────┬──────────┬──────────┬──────────╮
+-- index:           │        0 │        1 │        2 │        3 │
+--                  ├──────────┼──────────┼──────────┼──────────┤
+-- prefix summary:  │   Sum 10 │    Sum 9 │    Sum 7 |    Sum 4 │
+--                  ├──────────┼──────────┼──────────┼──────────┤
+-- (> Sum 4):       │     True │     True │     True │    False │
+--                  ╰──────────┴──────────┴──────────┴──────────╯
+-- result:                                  ( Just 2 ,   Just 3 )
+-- @
 --
 -- >>> binarySearchSuffix (> Sum 20) xs
 -- (Nothing,Just 0)
 --
--- There is no index for which @(> Sum 20)@ is @True@.
+-- @
+--                           ╭──────────┬──────────┬──────────┬──────────╮
+-- index:                    │        0 │        1 │        2 │        3 │
+--                           ├──────────┼──────────┼──────────┼──────────┤
+-- prefix summary:           │   Sum 10 │    Sum 9 │    Sum 7 |    Sum 4 │
+--                           ├──────────┼──────────┼──────────┼──────────┤
+-- (> Sum 20):               │    False │    False │    False │    False │
+--                           ╰──────────┴──────────┴──────────┴──────────╯
+-- result:         ( Nothing ,   Just 0 )
+-- @
 --
--- * @0: Sum 10 > Sum 20 = False@.
--- * @1: Sum 9 > Sum 20 = False@.
--- * @2: Sum 7 > Sum 20 = False@.
--- * @3: Sum 4 > Sum 20 = False@.
 binarySearchSuffix
   :: Measured a => (Measure a -> Bool) -> MSeq a -> (Maybe Int, Maybe Int)
 binarySearchSuffix p = \case
