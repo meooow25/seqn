@@ -275,11 +275,11 @@ deleteSure :: Ord a => a -> MTree (Elem a) -> MTree (Elem a)
 deleteSure !k = \case
   MBin _ _ x@(Elem x1) l r -> case l of
     MTip
-      | k == x1 -> r
+      | x1 <= k -> r
       | otherwise -> T.cons x (deleteSure k r)
     MBin _ (Min v) _ _ _
-      | k == v -> T.balanceR x (deleteSure k l) r
-      | k == x1 -> T.glue l r
+      | v <= k -> T.balanceR x (deleteSure k l) r
+      | x1 <= k -> T.glue l r
       | otherwise -> T.balanceL x l (deleteSure k r)
   MTip -> error "PQueue.deleteSure: impossible"
 {-# INLINABLE deleteSure #-}
