@@ -1,3 +1,18 @@
+Benchmarking performed with GHC 9.8.2 `-O`. The output CSV file is at
+[`result/result.csv`](result/result.csv).
+
+Notes:
+
+* It is difficult to directly compare the same operation for a lazy structure
+  and a strict structure. Do not take the benchmarks at face value when
+  comparing lazy structures (Sequence and FingerTree) against strict structures
+  (Seq, MSeq, RRBVector).
+* Most benchmarks force some result to WHNF. A suffix of `nf` indiciates that
+  the result is a sequence and it is forced to NF. The reason for this is to
+  provide some comparison against the lazy structures in case forcing to WHNF
+  does little work for the lazy structures.
+
+### Sequences
 
 ```
                       │      Seq      │      MSeq      │    Sequence    │   RRBVector    │  FingerTree
@@ -82,6 +97,8 @@ binarySearchPrefix    │               │  400 μs    1x  │                �
 binarySearchSuffix    │               │  412 μs    1x  │                │                │
 measured split        │               │  2.9 ms    1x  │                │                │   32 ms   11x
 ```
+
+### Priority queues
 
 ```
            │ seqn PQueue   │ pqueue PQueue  │ fingertree PQueue
