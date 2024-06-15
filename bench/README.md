@@ -1,3 +1,25 @@
+## Comparisons
+
+| Library      | Type                    | Performance              | Spine-strict | Value-strict |
+| ---          | ---                     | ---                      | ---          | ---          |
+| `seqn`       | `Data.Seqn.Seq.Seq`     | Baseline                 | Yes          | Yes          |
+| `containers` | `Data.Sequence.Seq`     | Comparable<sup>[1]</sup> | No           | No           |
+| `rrb-vector` | `Data.RRBVector.Vector` | Comparable<sup>[2]</sup> | Yes          | No           |
+
+<sup>1</sup> Has asymptotically better complexity for access at either end  
+<sup>2</sup> Slow at structural changes, but faster otherwise
+
+| Library      | Type                         | Performance        | Spine-strict | Value-strict |
+| ---          | ---                          | ---                | ---          | ---          |
+| `seqn`       | `Data.Seqn.Seq.MSeq`         | Baseline           | Yes          | Yes          |
+| `fingertree` | `Data.FingerTree.FingerTree` | Slow<sup>[3]</sup> | No           | No           |
+
+<sup>3</sup> Has asymptotically better complexity for access at either end
+
+For more details on performance, see benchmarks below.
+
+## Benchmarks
+
 Benchmarking performed with GHC 9.8.2 `-O`. The output CSV file is at
 [`result/result.csv`](result/result.csv).
 
@@ -9,8 +31,10 @@ Notes:
   (Seq, MSeq, RRBVector).
 * Most benchmarks force some result to WHNF. A suffix of `nf` indiciates that
   the result is a sequence and it is forced to NF. The reason for this is to
-  provide some comparison against the lazy structures in case forcing to WHNF
-  does little work for the lazy structures.
+  provide some comparison against the lazy structures for which forcing to WHNF
+  does not finish the work of the operation. When comparing such benchmarks,
+  it would be most accurate to do so after subtracting the value of the `rnf`
+  benchmark.
 
 ### Sequences
 
