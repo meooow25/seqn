@@ -653,55 +653,65 @@ mapEitherA f = \case
 -- | \(O(i + \log n)\). The longest prefix of elements that satisfy a predicate.
 -- \(i\) is the length of the prefix.
 takeWhile :: Measured a => (a -> Bool) -> MSeq a -> MSeq a
-takeWhile f t = IFo.ifoldr (\i x z -> if f x then z else take i t) t t
+takeWhile p t = IFo.ifoldr (\i x z -> if p x then z else take i t) t t
 {-# INLINE takeWhile #-}
 
 -- | \(O(i + \log n)\). The remainder after removing the longest prefix of
 -- elements that satisfy a predicate.
 -- \(i\) is the length of the prefix.
 dropWhile :: Measured a => (a -> Bool) -> MSeq a -> MSeq a
-dropWhile f t = IFo.ifoldr (\i x z -> if f x then z else drop i t) MEmpty t
+dropWhile p t = IFo.ifoldr (\i x z -> if p x then z else drop i t) MEmpty t
 {-# INLINE dropWhile #-}
 
 -- | \(O(i + \log n)\). The longest prefix of elements that satisfy a predicate,
 -- together with the remainder of the sequence.
 -- \(i\) is the length of the prefix.
+--
+-- @span p xs = ('takeWhile' p xs, 'dropWhile' p xs)@
 span :: Measured a => (a -> Bool) -> MSeq a -> (MSeq a, MSeq a)
-span f t = IFo.ifoldr (\i x z -> if f x then z else splitAt i t) (t, MEmpty) t
+span p t = IFo.ifoldr (\i x z -> if p x then z else splitAt i t) (t, MEmpty) t
 {-# INLINE span #-}
 
 -- | \(O(i + \log n)\). The longest prefix of elements that /do not/ satisfy a
 -- predicate, together with the remainder of the sequence. \(i\) is the length
 -- of the prefix.
+--
+-- @break p = 'span' (not . p)@
 break :: Measured a => (a -> Bool) -> MSeq a -> (MSeq a, MSeq a)
-break f = span (not . f)
+break p = span (not . p)
 {-# INLINE break #-}
 
 -- | \(O(i + \log n)\). The longest suffix of elements that satisfy a predicate.
 -- \(i\) is the length of the suffix.
 takeWhileEnd :: Measured a => (a -> Bool) -> MSeq a -> MSeq a
-takeWhileEnd f t = IFo.ifoldl (\i z x -> if f x then z else drop (i+1) t) t t
+takeWhileEnd p t = IFo.ifoldl (\i z x -> if p x then z else drop (i+1) t) t t
 {-# INLINE takeWhileEnd #-}
 
 -- | \(O(i + \log n)\). The remainder after removing the longest suffix of
 -- elements that satisfy a predicate.
 -- \(i\) is the length of the suffix.
 dropWhileEnd :: Measured a => (a -> Bool) -> MSeq a -> MSeq a
-dropWhileEnd f t = IFo.ifoldl (\i z x -> if f x then z else take (i+1) t) MEmpty t
+dropWhileEnd p t =
+  IFo.ifoldl (\i z x -> if p x then z else take (i+1) t) MEmpty t
 {-# INLINE dropWhileEnd #-}
 
 -- | \(O(i + \log n)\). The longest suffix of elements that satisfy a predicate,
 -- together with the remainder of the sequence.
 -- \(i\) is the length of the suffix.
+--
+-- @spanEnd p xs = ('dropWhileEnd' p xs, 'takeWhileEnd' p xs)@
 spanEnd :: Measured a => (a -> Bool) -> MSeq a -> (MSeq a, MSeq a)
-spanEnd f t = IFo.ifoldl (\i z x -> if f x then z else splitAt (i+1) t) (MEmpty, t) t
+spanEnd p t =
+  IFo.ifoldl (\i z x -> if p x then z else splitAt (i+1) t) (MEmpty, t) t
 {-# INLINE spanEnd #-}
 
 -- | \(O(i + \log n)\). The longest suffix of elements that /do not/ satisfy a
 -- predicate, together with the remainder of the sequence.
 -- \(i\) is the length of the suffix.
+--
+-- @breakEnd p = 'spanEnd' (not . p)@
 breakEnd :: Measured a => (a -> Bool) -> MSeq a -> (MSeq a, MSeq a)
-breakEnd f = spanEnd (not . f)
+breakEnd p = spanEnd (not . p)
 {-# INLINE breakEnd #-}
 
 --------------

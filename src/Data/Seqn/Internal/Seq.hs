@@ -1068,7 +1068,7 @@ mapEitherA f = \case
 -- >>> takeWhile even (fromList [2,4,6,1,3,2,4])
 -- [2,4,6]
 takeWhile :: (a -> Bool) -> Seq a -> Seq a
-takeWhile f t = IFo.ifoldr (\i x z -> if f x then z else take i t) t t
+takeWhile p t = IFo.ifoldr (\i x z -> if p x then z else take i t) t t
 {-# INLINE takeWhile #-}
 
 -- | \(O(i + \log n)\). The remainder after removing the longest prefix of
@@ -1080,58 +1080,68 @@ takeWhile f t = IFo.ifoldr (\i x z -> if f x then z else take i t) t t
 -- >>> dropWhile even (fromList [2,4,6,1,3,2,4])
 -- [1,3,2,4]
 dropWhile :: (a -> Bool) -> Seq a -> Seq a
-dropWhile f t = IFo.ifoldr (\i x z -> if f x then z else drop i t) Empty t
+dropWhile p t = IFo.ifoldr (\i x z -> if p x then z else drop i t) Empty t
 {-# INLINE dropWhile #-}
 
 -- | \(O(i + \log n)\). The longest prefix of elements that satisfy a predicate,
 -- together with the remainder of the sequence.
 -- \(i\) is the length of the prefix.
 --
+-- @span p xs = ('takeWhile' p xs, 'dropWhile' p xs)@
+--
 -- ==== __Examples__
 --
 -- >>> span even (fromList [2,4,6,1,3,2,4])
 -- ([2,4,6],[1,3,2,4])
 span :: (a -> Bool) -> Seq a -> (Seq a, Seq a)
-span f t = IFo.ifoldr (\i x z -> if f x then z else splitAt i t) (t, Empty) t
+span p t = IFo.ifoldr (\i x z -> if p x then z else splitAt i t) (t, Empty) t
 {-# INLINE span #-}
 
 -- | \(O(i + \log n)\). The longest prefix of elements that /do not/ satisfy a
 -- predicate, together with the remainder of the sequence. \(i\) is the length
 -- of the prefix.
 --
+-- @break p = 'span' (not . p)@
+--
 -- ==== __Examples__
 --
 -- >>> break odd (fromList [2,4,6,1,3,2,4])
 -- ([2,4,6],[1,3,2,4])
 break :: (a -> Bool) -> Seq a -> (Seq a, Seq a)
-break f = span (not . f)
+break p = span (not . p)
 {-# INLINE break #-}
 
 -- | \(O(i + \log n)\). The longest suffix of elements that satisfy a predicate.
 -- \(i\) is the length of the suffix.
 takeWhileEnd :: (a -> Bool) -> Seq a -> Seq a
-takeWhileEnd f t = IFo.ifoldl (\i z x -> if f x then z else drop (i+1) t) t t
+takeWhileEnd p t = IFo.ifoldl (\i z x -> if p x then z else drop (i+1) t) t t
 {-# INLINE takeWhileEnd #-}
 
 -- | \(O(i + \log n)\). The remainder after removing the longest suffix of
 -- elements that satisfy a predicate.
 -- \(i\) is the length of the suffix.
 dropWhileEnd :: (a -> Bool) -> Seq a -> Seq a
-dropWhileEnd f t = IFo.ifoldl (\i z x -> if f x then z else take (i+1) t) Empty t
+dropWhileEnd p t =
+  IFo.ifoldl (\i z x -> if p x then z else take (i+1) t) Empty t
 {-# INLINE dropWhileEnd #-}
 
 -- | \(O(i + \log n)\). The longest suffix of elements that satisfy a predicate,
 -- together with the remainder of the sequence.
 -- \(i\) is the length of the suffix.
+--
+-- @spanEnd p xs = ('dropWhileEnd' p xs, 'takeWhileEnd' p xs)@
 spanEnd :: (a -> Bool) -> Seq a -> (Seq a, Seq a)
-spanEnd f t = IFo.ifoldl (\i z x -> if f x then z else splitAt (i+1) t) (Empty, t) t
+spanEnd p t =
+  IFo.ifoldl (\i z x -> if p x then z else splitAt (i+1) t) (Empty, t) t
 {-# INLINE spanEnd #-}
 
 -- | \(O(i + \log n)\). The longest suffix of elements that /do not/ satisfy a
 -- predicate, together with the remainder of the sequence.
 -- \(i\) is the length of the suffix.
+--
+-- @breakEnd p = 'spanEnd' (not . p)@
 breakEnd :: (a -> Bool) -> Seq a -> (Seq a, Seq a)
-breakEnd f = spanEnd (not . f)
+breakEnd p = spanEnd (not . p)
 {-# INLINE breakEnd #-}
 
 --------------
