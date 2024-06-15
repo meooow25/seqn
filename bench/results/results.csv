@@ -1,0 +1,308 @@
+Name,Mean (ps),2*Stdev (ps)
+All.Sequence.rnf.Seq,27865752,1428038
+All.Sequence.rnf.MSeq,26234141,2434804
+All.Sequence.rnf.Sequence,57151281,3529064
+All.Sequence.rnf.RRBVector,29760368,1911060
+All.Sequence.rnf.FingerTree,173018881,14197742
+All.Sequence.fromList.Seq,72347164,3147676
+All.Sequence.fromList.Seq rev,72502837,3818278
+All.Sequence.fromList.MSeq,97692138,7461342
+All.Sequence.fromList.Sequence,27445090,1411040
+All.Sequence.fromList.RRBVector,30537528,1330080
+All.Sequence.fromList.FingerTree,361560112,26922040
+All.Sequence.fromList nf.Seq,110152030,5786900
+All.Sequence.fromList nf.Seq rev,106425758,6370392
+All.Sequence.fromList nf.MSeq,133495421,7075036
+All.Sequence.fromList nf.Sequence,87138819,7703398
+All.Sequence.fromList nf.RRBVector,60798433,3698550
+All.Sequence.fromList nf.FingerTree,671016768,55680706
+All.Sequence.fromList fusion.Seq,74803926,3063420
+All.Sequence.fromList fusion.Seq rev,73803222,6536218
+All.Sequence.fromList fusion.MSeq,103603510,8074130
+All.Sequence.fromList fusion.Sequence,93725821,8623208
+All.Sequence.fromList fusion.RRBVector,84412265,8204252
+All.Sequence.fromList fusion.FingerTree,453862140,35541006
+All.Sequence.foldr short-circuit.Seq,31070519,1927894
+All.Sequence.foldr short-circuit.MSeq,31354034,1758370
+All.Sequence.foldr short-circuit.Sequence,63334748,6299856
+All.Sequence.foldr short-circuit.RRBVector,10026357,448962
+All.Sequence.foldr short-circuit.FingerTree,246713603,21379898
+All.Sequence.cps sum foldr.Seq,63034291,5742370
+All.Sequence.cps sum foldr.MSeq,62454942,3483304
+All.Sequence.cps sum foldr.Sequence,113484451,8096660
+All.Sequence.cps sum foldr.RRBVector,123834402,6689488
+All.Sequence.cps sum foldr.FingerTree,431396275,39222428
+All.Sequence.foldl short-circuit.Seq,22296011,1592308
+All.Sequence.foldl short-circuit.MSeq,22291715,833118
+All.Sequence.foldl short-circuit.Sequence,62259682,3333042
+All.Sequence.foldl short-circuit.RRBVector,10054147,389544
+All.Sequence.foldl short-circuit.FingerTree,319816390,23446744
+All.Sequence.cps sum foldl.Seq,50904758,3306712
+All.Sequence.cps sum foldl.MSeq,50337275,2860868
+All.Sequence.cps sum foldl.Sequence,107099732,5725752
+All.Sequence.cps sum foldl.RRBVector,124701921,10864214
+All.Sequence.cps sum foldl.FingerTree,770121631,55684296
+All.Sequence.sum . toList.Seq,61728535,5500776
+All.Sequence.sum . toList.MSeq,61316317,5997924
+All.Sequence.sum . toList.Sequence,106764781,6317704
+All.Sequence.sum . toList.RRBVector,70638675,3011014
+All.Sequence.sum . toList.FingerTree,429955995,24180308
+All.Sequence.foldl'.Seq,16410930,1550704
+All.Sequence.foldl'.MSeq,17405784,1624530
+All.Sequence.foldl'.Sequence,70532689,3025580
+All.Sequence.foldl'.RRBVector,22113154,728094
+All.Sequence.foldl'.FingerTree,425513004,33438970
+All.Sequence.foldr'.Seq,14959738,1251776
+All.Sequence.foldr'.MSeq,16088921,904612
+All.Sequence.foldr'.Sequence,69809621,3658290
+All.Sequence.foldr'.RRBVector,22351448,1641968
+All.Sequence.foldr'.FingerTree,761004553,62662226
+All.Sequence.toList.Seq,57162107,4022674
+All.Sequence.toList.MSeq,58327049,3709324
+All.Sequence.toList.Sequence,43837350,3804736
+All.Sequence.toList.RRBVector,16610749,840644
+All.Sequence.toList.FingerTree,485934395,38985222
+All.Sequence.ifoldr short-circuit.Seq,31858744,2873788
+All.Sequence.ifoldr short-circuit.MSeq,32009232,2911874
+All.Sequence.ifoldr short-circuit.Sequence,95989757,7927396
+All.Sequence.ifoldr short-circuit.RRBVector,7392786,339484
+All.Sequence.cps sum ifoldr.Seq,61492293,3750410
+All.Sequence.cps sum ifoldr.MSeq,62888377,6133756
+All.Sequence.cps sum ifoldr.Sequence,143826848,7265668
+All.Sequence.cps sum ifoldr.RRBVector,135481476,8211138
+All.Sequence.ifoldl short-circuit.Seq,22527343,1759728
+All.Sequence.ifoldl short-circuit.MSeq,22821044,1536804
+All.Sequence.ifoldl short-circuit.Sequence,43647509,3246642
+All.Sequence.ifoldl short-circuit.RRBVector,7497096,729180
+All.Sequence.cps sum ifoldl.Seq,51429840,3699432
+All.Sequence.cps sum ifoldl.MSeq,51179489,3654280
+All.Sequence.cps sum ifoldl.Sequence,145949342,14342510
+All.Sequence.cps sum ifoldl.RRBVector,136872066,5897192
+All.Sequence.ifoldl'.Seq,18923798,1599596
+All.Sequence.ifoldl'.MSeq,19295712,1501382
+All.Sequence.ifoldl'.Sequence,177416751,11714110
+All.Sequence.ifoldl'.RRBVector,14099923,687956
+All.Sequence.ifoldr'.Seq,20501423,1485592
+All.Sequence.ifoldr'.MSeq,21031050,1143672
+All.Sequence.ifoldr'.Sequence,183865691,12825228
+All.Sequence.ifoldr'.RRBVector,15953266,733698
+All.Sequence.==.Seq,114576635,10013942
+All.Sequence.==.MSeq,116631940,6462788
+All.Sequence.==.Sequence,156929885,11287220
+All.Sequence.==.RRBVector,126821682,11273594
+All.Sequence.==.FingerTree,1099782200,92583666
+All.Sequence.compare.Seq,115998641,5929556
+All.Sequence.compare.MSeq,121318413,5873518
+All.Sequence.compare.Sequence,175274576,12641124
+All.Sequence.compare.RRBVector,160241306,11106248
+All.Sequence.compare.FingerTree,1161170381,93646302
+All.Sequence.replicate.Seq,102194,6924
+All.Sequence.replicate.MSeq,134019,12490
+All.Sequence.replicate.Sequence,8293,746
+All.Sequence.replicate.RRBVector,60211,5918
+All.Sequence.generate.Seq,55454215,4095982
+All.Sequence.generate.MSeq,60503760,2947472
+All.Sequence.generate.Sequence,16786,1324
+All.Sequence.big <> big.Seq,10918,784
+All.Sequence.big <> big.MSeq,11766,818
+All.Sequence.big <> big.Sequence,160657,12206
+All.Sequence.big <> big.RRBVector,3756491,360952
+All.Sequence.big <> big.FingerTree,25170,1392
+All.Sequence.big <> 2.Seq,104438,5652
+All.Sequence.big <> 2.MSeq,103491,7770
+All.Sequence.big <> 2.Sequence,22458,1504
+All.Sequence.big <> 2.RRBVector,1244263,85662
+All.Sequence.big <> 2.FingerTree,25057,1390
+All.Sequence.cons many.Seq,1799218275,129408716
+All.Sequence.cons many.MSeq,1883807900,125537550
+All.Sequence.cons many.Sequence,130943135,12709698
+All.Sequence.cons many.RRBVector,1681074025,103238502
+All.Sequence.cons many.FingerTree,248482696,24550992
+All.Sequence.snoc many.Seq,1851810837,85424728
+All.Sequence.snoc many.MSeq,1858678862,172783096
+All.Sequence.snoc many.Sequence,132909432,11513576
+All.Sequence.snoc many.RRBVector,635607340,50264194
+All.Sequence.snoc many.FingerTree,258237007,22534708
+All.Sequence.index many.Seq,400913112,28554336
+All.Sequence.index many.MSeq,456628410,31894860
+All.Sequence.index many.Sequence,828917221,44873578
+All.Sequence.index many.RRBVector,146863900,13247588
+All.Sequence.lookup many.Seq,406133687,21973560
+All.Sequence.lookup many.MSeq,474128140,46213444
+All.Sequence.lookup many.Sequence,826605371,42526770
+All.Sequence.lookup many.RRBVector,27556065,1345466
+All.Sequence.update many.Seq,1277811937,60548946
+All.Sequence.update many.MSeq,1404698515,80367566
+All.Sequence.update many.Sequence,1873158343,130311892
+All.Sequence.update many.RRBVector,589464096,39484480
+All.Sequence.insertAt many.Seq,1627795137,110363118
+All.Sequence.insertAt many.MSeq,1496723662,109729360
+All.Sequence.insertAt many.Sequence,1785856518,87701128
+All.Sequence.insertAt many.RRBVector,31050525200,2388688114
+All.Sequence.deleteAt many.Seq,1572267587,92117140
+All.Sequence.deleteAt many.MSeq,1429829975,111892058
+All.Sequence.deleteAt many.Sequence,1722947725,92601220
+All.Sequence.deleteAt many.RRBVector,29485533800,2781681532
+All.Sequence.uncons many.Seq,947902321,46837880
+All.Sequence.uncons many.MSeq,842460684,49869738
+All.Sequence.uncons many.Sequence,129450962,12076126
+All.Sequence.uncons many.RRBVector,1575846712,84938354
+All.Sequence.uncons many.FingerTree,359154900,23817946
+All.Sequence.unsnoc many.Seq,904614075,49645502
+All.Sequence.unsnoc many.MSeq,863992418,52336888
+All.Sequence.unsnoc many.Sequence,130685780,11892624
+All.Sequence.unsnoc many.RRBVector,379953714,25106738
+All.Sequence.unsnoc many.FingerTree,366458792,26615664
+All.Sequence.splitAt many.Seq,2186132837,182226066
+All.Sequence.splitAt many.MSeq,2019284412,198220772
+All.Sequence.splitAt many.Sequence,1731473381,93293004
+All.Sequence.splitAt many.RRBVector,2063388625,197733534
+All.Sequence.tails.Seq,2220895675,212521882
+All.Sequence.tails.Sequence,18858,1500
+All.Sequence.tails.Sequence each,626012840,17736780
+All.Sequence.inits.Seq,2424639387,177319462
+All.Sequence.inits.Sequence,21827,1586
+All.Sequence.inits.Sequence each,610756050,54580210
+All.Sequence.chunks 2.Seq,128564219,11035334
+All.Sequence.chunks 2.Sequence,37581,3280
+All.Sequence.chunks 2 nf.Seq,172412746,15137270
+All.Sequence.chunks 2 nf.Sequence,399839178,26887200
+All.Sequence.chunks sqrt.Seq,28127646,2801388
+All.Sequence.chunks sqrt.Sequence,132713,12612
+All.Sequence.chunks sqrt nf.Seq,62585150,3104482
+All.Sequence.chunks sqrt nf.Sequence,100240896,6782448
+All.Sequence.foldMap.Seq,16337844,1436466
+All.Sequence.foldMap.MSeq,15735023,957698
+All.Sequence.foldMap.Sequence,57990785,2982618
+All.Sequence.foldMap.RRBVector,4516355,379616
+All.Sequence.foldMap.FingerTree,169957915,12009358
+All.Sequence.map.Seq,31770691,1495018
+All.Sequence.map.MSeq,33755405,1960502
+All.Sequence.map.Sequence,13737,806
+All.Sequence.map.RRBVector,33247481,3313154
+All.Sequence.map.FingerTree,37383,2820
+All.Sequence.map nf.Seq,59854618,2674340
+All.Sequence.map nf.MSeq,61896058,3841846
+All.Sequence.map nf.Sequence,170628804,13248300
+All.Sequence.map nf.RRBVector,105704087,5664890
+All.Sequence.map nf.FingerTree,365550392,27251742
+All.Sequence.imap.Seq,41380848,1333558
+All.Sequence.imap.MSeq,33911677,3141906
+All.Sequence.imap.Sequence,16232,1542
+All.Sequence.imap.RRBVector,60617300,5541068
+All.Sequence.liftA2.Seq,206438852,13991680
+All.Sequence.liftA2.MSeq,199783764,18504890
+All.Sequence.liftA2.Sequence,47346,3138
+All.Sequence.<*.Seq,129448751,2781320
+All.Sequence.<*.Sequence,26298,1446
+All.Sequence.<*.RRBVector,10908265800,769787196
+All.Sequence.*>.Seq,74477,6258
+All.Sequence.*>.Sequence,28105,1454
+All.Sequence.*>.RRBVector,9959322050,925684514
+All.Sequence.>>= 1.Seq,104163651,6865210
+All.Sequence.>>= 1.MSeq,143025355,10848406
+All.Sequence.>>= 1.Sequence,11626324375,465743330
+All.Sequence.>>= 1.RRBVector,198745315400,11201505612
+All.Sequence.>>= 2.Seq,273395046,22467276
+All.Sequence.>>= 2.MSeq,276368067,21448600
+All.Sequence.>>= 2.Sequence,489178053,29384678
+All.Sequence.>>= 2.RRBVector,54786244200,3654466716
+All.Sequence.>>= 3.Seq,321393265,22032990
+All.Sequence.>>= 3.MSeq,365718618,11477768
+All.Sequence.>>= 3.Sequence,10631247675,496914230
+All.Sequence.>>= 3.RRBVector,165343278000,11502962010
+All.Sequence.filter.Seq,56698496,5409746
+All.Sequence.filter.MSeq,55552144,3315390
+All.Sequence.filter.Sequence,114177511,5548378
+All.Sequence.mapMaybe.Seq,55637098,2820080
+All.Sequence.mapMaybe.MSeq,54562882,3570844
+All.Sequence.mapEither.Seq,220811785,21264488
+All.Sequence.mapEither.MSeq,186551421,13230978
+All.Sequence.span.Seq,30787766,1437176
+All.Sequence.span.MSeq,32092491,3119092
+All.Sequence.span.Sequence,62555425,5814512
+All.Sequence.findIndex.Seq,14138629,897610
+All.Sequence.findIndex.MSeq,25461927,1868602
+All.Sequence.findIndex.Sequence,65947122,6347860
+All.Sequence.findIndex.RRBVector,26641977,1980640
+All.Sequence.reverse.Seq,69921158,5248730
+All.Sequence.reverse.MSeq,70039536,6269032
+All.Sequence.reverse.Sequence,13750,1362
+All.Sequence.reverse.FingerTree,30529,1540
+All.Sequence.reverse nf.Seq,104657290,5610666
+All.Sequence.reverse nf.MSeq,101641936,5777788
+All.Sequence.reverse nf.Sequence,181710210,13032722
+All.Sequence.reverse nf.FingerTree,411448976,25056712
+All.Sequence.intersperse.Seq,72476411,5902180
+All.Sequence.intersperse.MSeq,79574760,5383950
+All.Sequence.intersperse.Sequence,64448,5846
+All.Sequence.intersperse nf.Seq,135579048,10664084
+All.Sequence.intersperse nf.MSeq,136132302,12784680
+All.Sequence.intersperse nf.Sequence,513272509,42339610
+All.Sequence.scanl.Seq,32173424,2204118
+All.Sequence.scanl.MSeq,34079637,2951578
+All.Sequence.scanl.Sequence,39542,2826
+All.Sequence.scanl nf.Seq,63111200,3681740
+All.Sequence.scanl nf.MSeq,63770303,6165504
+All.Sequence.scanl nf.Sequence,267093460,24072808
+All.Sequence.scanr.Seq,33362408,2755400
+All.Sequence.scanr.MSeq,35270752,1761212
+All.Sequence.scanr.Sequence,38830,1738
+All.Sequence.scanr nf.Seq,63741319,5826402
+All.Sequence.scanr nf.MSeq,64143530,6402326
+All.Sequence.scanr nf.Sequence,280701529,23645076
+All.Sequence.sort random.Seq,1405030587,112580794
+All.Sequence.sort random.MSeq,1360495456,127693988
+All.Sequence.sort random.Sequence,2793348262,145782658
+All.Sequence.sort random.Sequence unstable,2575480512,243648226
+All.Sequence.sort asc.Seq,185659529,12673628
+All.Sequence.sort asc.MSeq,175324158,10762890
+All.Sequence.sort asc.Sequence,706028212,42874800
+All.Sequence.sort asc.Sequence unstable,613198971,44698410
+All.Sequence.zipWith.Seq,121623478,10671560
+All.Sequence.zipWith.MSeq,123822346,5815786
+All.Sequence.zipWith.Sequence,32997,2998
+All.Sequence.zipWith.RRBVector,266301117,25221448
+All.Sequence.zipWith nf.Seq,155813071,10491396
+All.Sequence.zipWith nf.MSeq,159153135,13734202
+All.Sequence.zipWith nf.Sequence,559676696,45186754
+All.Sequence.zipWith nf.RRBVector,330875175,24023188
+All.Sequence.zipWith3.Seq,179569082,14066026
+All.Sequence.zipWith3.MSeq,181963657,16999930
+All.Sequence.zipWith3.Sequence,64141,5674
+All.Sequence.zipWith3 nf.Seq,214356813,3265604
+All.Sequence.zipWith3 nf.MSeq,217018473,13085440
+All.Sequence.zipWith3 nf.Sequence,1234126750,89799232
+All.Sequence.unzipWith.Seq,162479148,11276446
+All.Sequence.unzipWith.MSeq,75250603,6305082
+All.Sequence.unzipWith.Sequence,34897,1468
+All.Sequence.unzipWith.RRBVector,57816305,5618332
+All.Sequence.unzipWith nf.Seq,242374255,3749616
+All.Sequence.unzipWith nf.MSeq,143284446,11552046
+All.Sequence.unzipWith nf.Sequence,483715859,42005164
+All.Sequence.unzipWith nf.RRBVector,120001817,11254458
+All.Sequence.mconcat.Seq,128417830,7165976
+All.Sequence.mconcat.Sequence,211652715,6555730
+All.Sequence.mconcat.RRBVector,13425096000,808981442
+All.Sequence.binarySearchFind.Seq,394602157,25055400
+All.Sequence.binarySearchFind.MSeq,395380489,24577992
+All.Sequence.isPrefixOf.Seq,119680055,6482102
+All.Sequence.isPrefixOf.MSeq,131212539,10487542
+All.Sequence.infixIndices full.Seq,205962069,14261250
+All.Sequence.infixIndices all.Seq,173240335,10738236
+All.Sequence.binarySearchPrefix.MSeq,400474717,22782722
+All.Sequence.binarySearchSuffix.MSeq,411675501,28137016
+All.Sequence.measured split.MSeq,2853392550,195654438
+All.Sequence.measured split.FingerTree,31815992400,1624502490
+All.PQueue.fromList.seqn,358259134,24751126
+All.PQueue.fromList.pqueue,219032451,11981938
+All.PQueue.fromList.fingertree,1741340075,132665382
+All.PQueue.insert.seqn,2954249418,200076346
+All.PQueue.insert.pqueue,309521276,24725628
+All.PQueue.insert.fingertree,1185864478,67057944
+All.PQueue.minView.seqn,3166022637,274531680
+All.PQueue.minView.pqueue,3529249112,303059770
+All.PQueue.minView.fingertree,100287569200,4527082406
+All.PQueue.sort list.seqn,3709893812,220249340
+All.PQueue.sort list.pqueue,3826252175,200426206
+All.PQueue.sort list.fingertree,105477957000,9374178338
