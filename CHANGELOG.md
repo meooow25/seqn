@@ -1,5 +1,3 @@
-# Revision history for seqn
+### 0.1.0.0 -- 2024-06-16
 
-## 0.1.0.0 -- YYYY-mm-dd
-
-* First version. Released on an unsuspecting world.
+* First version.

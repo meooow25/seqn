@@ -1087,7 +1087,7 @@ dropWhile p t = IFo.ifoldr (\i x z -> if p x then z else drop i t) Empty t
 -- together with the remainder of the sequence.
 -- \(i\) is the length of the prefix.
 --
--- @span p xs = ('takeWhile' p xs, 'dropWhile' p xs)@
+-- @span p xs == ('takeWhile' p xs, 'dropWhile' p xs)@
 --
 -- ==== __Examples__
 --
@@ -1101,7 +1101,7 @@ span p t = IFo.ifoldr (\i x z -> if p x then z else splitAt i t) (t, Empty) t
 -- predicate, together with the remainder of the sequence. \(i\) is the length
 -- of the prefix.
 --
--- @break p = 'span' (not . p)@
+-- @break p == 'span' (not . p)@
 --
 -- ==== __Examples__
 --
@@ -1129,7 +1129,7 @@ dropWhileEnd p t =
 -- together with the remainder of the sequence.
 -- \(i\) is the length of the suffix.
 --
--- @spanEnd p xs = ('dropWhileEnd' p xs, 'takeWhileEnd' p xs)@
+-- @spanEnd p xs == ('dropWhileEnd' p xs, 'takeWhileEnd' p xs)@
 spanEnd :: (a -> Bool) -> Seq a -> (Seq a, Seq a)
 spanEnd p t =
   IFo.ifoldl (\i z x -> if p x then z else splitAt (i+1) t) (Empty, t) t
@@ -1139,7 +1139,7 @@ spanEnd p t =
 -- predicate, together with the remainder of the sequence.
 -- \(i\) is the length of the suffix.
 --
--- @breakEnd p = 'spanEnd' (not . p)@
+-- @breakEnd p == 'spanEnd' (not . p)@
 breakEnd :: (a -> Bool) -> Seq a -> (Seq a, Seq a)
 breakEnd p = spanEnd (not . p)
 {-# INLINE breakEnd #-}

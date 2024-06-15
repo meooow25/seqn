@@ -491,7 +491,7 @@ adjust f !i t = case t of
 {-# INLINE adjust #-}
 
 -- | \(O(\log n)\). Insert an element at an index. If the index is out of
--- bounds, the element is added to the beginning or the end of the sequence.
+-- bounds, the element is added to the closest end of the sequence.
 insertAt :: Measured a => Int -> a -> MSeq a -> MSeq a
 insertAt !i y t = case t of
   MTree x xs
@@ -667,7 +667,7 @@ dropWhile p t = IFo.ifoldr (\i x z -> if p x then z else drop i t) MEmpty t
 -- together with the remainder of the sequence.
 -- \(i\) is the length of the prefix.
 --
--- @span p xs = ('takeWhile' p xs, 'dropWhile' p xs)@
+-- @span p xs == ('takeWhile' p xs, 'dropWhile' p xs)@
 span :: Measured a => (a -> Bool) -> MSeq a -> (MSeq a, MSeq a)
 span p t = IFo.ifoldr (\i x z -> if p x then z else splitAt i t) (t, MEmpty) t
 {-# INLINE span #-}
@@ -676,7 +676,7 @@ span p t = IFo.ifoldr (\i x z -> if p x then z else splitAt i t) (t, MEmpty) t
 -- predicate, together with the remainder of the sequence. \(i\) is the length
 -- of the prefix.
 --
--- @break p = 'span' (not . p)@
+-- @break p == 'span' (not . p)@
 break :: Measured a => (a -> Bool) -> MSeq a -> (MSeq a, MSeq a)
 break p = span (not . p)
 {-# INLINE break #-}
@@ -699,7 +699,7 @@ dropWhileEnd p t =
 -- together with the remainder of the sequence.
 -- \(i\) is the length of the suffix.
 --
--- @spanEnd p xs = ('dropWhileEnd' p xs, 'takeWhileEnd' p xs)@
+-- @spanEnd p xs == ('dropWhileEnd' p xs, 'takeWhileEnd' p xs)@
 spanEnd :: Measured a => (a -> Bool) -> MSeq a -> (MSeq a, MSeq a)
 spanEnd p t =
   IFo.ifoldl (\i z x -> if p x then z else splitAt (i+1) t) (MEmpty, t) t
@@ -709,7 +709,7 @@ spanEnd p t =
 -- predicate, together with the remainder of the sequence.
 -- \(i\) is the length of the suffix.
 --
--- @breakEnd p = 'spanEnd' (not . p)@
+-- @breakEnd p == 'spanEnd' (not . p)@
 breakEnd :: Measured a => (a -> Bool) -> MSeq a -> (MSeq a, MSeq a)
 breakEnd p = spanEnd (not . p)
 {-# INLINE breakEnd #-}
@@ -923,8 +923,7 @@ isSubsequenceOf t1 t2 =
 ------------------
 
 -- | \(O(\min(n_1,n_2))\). Zip two sequences with a function. The result is
--- as long as the shorter sequence. Excess elements of the longer sequence are
--- discarded from the end.
+-- as long as the shorter sequence.
 zipWith :: Measured c => (a -> b -> c) -> MSeq a -> MSeq b -> MSeq c
 zipWith =
   (coerce :: ((a -> b -> Identity c) -> MSeq a -> MSeq b -> Identity (MSeq c))
@@ -933,8 +932,7 @@ zipWith =
 {-# INLINE zipWith #-}
 
 -- | \(O(\min(n_1,n_2,n_3))\). Zip three sequences with a function. The result
--- is as long as the shortest sequence. Excess elements of the longer sequences
--- are discarded from the end.
+-- is as long as the shortest sequence.
 zipWith3
   :: Measured d => (a -> b -> c -> d) -> MSeq a -> MSeq b -> MSeq c -> MSeq d
 zipWith3 =
@@ -1082,7 +1080,7 @@ summary = \case
 --                  ├──────────┼──────────┼──────────┼──────────┤
 -- (> Sum 20):      │    False │    False │    False │    False │
 --                  ╰──────────┴──────────┴──────────┴──────────╯
--- result:                                             ( Just 3 ,  Nothing)
+-- result:                                             ( Just 3 ,  Nothing )
 -- @
 --
 binarySearchPrefix
@@ -1148,7 +1146,7 @@ binarySearchPrefix p = \case
 --                  ╭──────────┬──────────┬──────────┬──────────╮
 -- index:           │        0 │        1 │        2 │        3 │
 --                  ├──────────┼──────────┼──────────┼──────────┤
--- prefix summary:  │   Sum 10 │    Sum 9 │    Sum 7 |    Sum 4 │
+-- suffix summary:  │   Sum 10 │    Sum 9 │    Sum 7 |    Sum 4 │
 --                  ├──────────┼──────────┼──────────┼──────────┤
 -- (> Sum 4):       │     True │     True │     True │    False │
 --                  ╰──────────┴──────────┴──────────┴──────────╯
@@ -1162,7 +1160,7 @@ binarySearchPrefix p = \case
 --                           ╭──────────┬──────────┬──────────┬──────────╮
 -- index:                    │        0 │        1 │        2 │        3 │
 --                           ├──────────┼──────────┼──────────┼──────────┤
--- prefix summary:           │   Sum 10 │    Sum 9 │    Sum 7 |    Sum 4 │
+-- suffix summary:           │   Sum 10 │    Sum 9 │    Sum 7 |    Sum 4 │
 --                           ├──────────┼──────────┼──────────┼──────────┤
 -- (> Sum 20):               │    False │    False │    False │    False │
 --                           ╰──────────┴──────────┴──────────┴──────────╯

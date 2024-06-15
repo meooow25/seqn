@@ -2,7 +2,7 @@
 -- = Priority queues
 --
 -- @PQueue@ is a minimum priority queue implemented using an
--- 'Data.Seqn.MSeq.MSeq'.
+-- t'Data.Seqn.MSeq.MSeq'.
 --
 -- * It is spine-strict, and can contain only a finite number of elements.
 -- * It is value-strict. It is guaranteed that if a @PQueue@ is in
@@ -13,6 +13,13 @@
 --   folded over in insertion order.
 -- * It is a mergeable priority queue. Two queues can be concatenated
 --   efficiently in logarithmic time.
+--
+-- It is recommended to import this module qualified to avoid name clashes.
+--
+-- @
+-- import Data.Seqn.PQueue (PQueue)
+-- import qualified Data.Seqn.PQueue as PQueue
+-- @
 --
 module Data.Seqn.PQueue
   (
