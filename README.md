@@ -41,3 +41,9 @@ For a detailed comparison, [see here](https://github.com/meooow25/seqn/tree/mast
 The interface and implementation of `seqn` is largely influenced by
 the libraries [`containers`](https://hackage.haskell.org/package/containers) and
 [`fingertree`](https://hackage.haskell.org/package/fingertree).
+
+## Contributing
+
+Questions, bug reports, documentation improvements, code contributions welcome!
+Please [open an issue](https://github.com/meooow25/seqn/issues) as the first
+step.
