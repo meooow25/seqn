@@ -597,8 +597,8 @@ toRevList t = X.build $ \lcons lnil -> F.foldl (flip lcons) lnil t
 ----------
 
 -- Precondition: 0 <= i < size xs
-index_ :: Int -> Tree a -> a
-index_ !i xs = getConst (T.adjustF Const i xs)
+indexTree :: Int -> Tree a -> a
+indexTree !i xs = getConst (T.adjustF Const i xs)
 
 -- | \(O(\log n)\). Look up the element at an index.
 --
@@ -612,7 +612,7 @@ lookup :: Int -> Seq a -> Maybe a
 lookup !i (Tree x xs)
   | i < 0 || T.size xs < i = Nothing
   | i == 0 = Just x
-  | otherwise = Just $! index_ (i-1) xs
+  | otherwise = Just $! indexTree (i-1) xs
 lookup _ Empty = Nothing
 {-# INLINE lookup #-}
 
@@ -629,12 +629,13 @@ index :: Int -> Seq a -> a
 index !i = \case
   Tree x xs
     | i == 0 -> x
-    | otherwise -> index_ (i-1) xs
+    | otherwise -> indexTree (i-1) xs
   Empty -> error "Seq.index: out of bounds"
 
 -- | \(O(\log n)\). Infix version of 'lookup'.
 (!?) :: Seq a -> Int -> Maybe a
 (!?) = flip lookup
+{-# INLINE (!?) #-}
 
 -- | \(O(\log n)\). Infix version of 'index'. Calls @error@ if the index is out
 -- of bounds.
@@ -651,7 +652,7 @@ index !i = \case
 -- >>> update 3 True (singleton False)
 -- [False]
 update :: Int -> a -> Seq a -> Seq a
-update i x = adjust (const x) i
+update i x t = adjust (const x) i t
 
 -- | \(O(\log n)\). Adjust the element at an index. If the index is out of
 -- bounds the sequence is returned unchanged.
