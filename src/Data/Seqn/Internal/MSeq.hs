@@ -140,6 +140,7 @@ import Data.Functor.Classes (Eq1(..), Ord1(..), Show1(..))
 import Data.Functor.Const (Const(..))
 import Data.Functor.Identity (Identity(..))
 import Data.List.NonEmpty (NonEmpty(..))
+import Data.Maybe (fromMaybe)
 import qualified Data.Monoid as Monoid
 import qualified Data.Primitive.Array as A
 import Data.Semigroup (Semigroup(..))
@@ -300,6 +301,7 @@ instance Measured a => Semigroup (MSeq a) where
   -- See Note [Complexity of stimes] in Data.Seqn.Internal.Seq
 
   sconcat (x:|xs) = mconcat (x:xs)
+  {-# INLINABLE sconcat #-}
 
 stimesLoop :: Measured a => Int -> a -> MTree a -> MTree a -> MTree a
 stimesLoop c !x !xs !acc
@@ -467,6 +469,7 @@ index !i = \case
 -- | \(O(\log n)\). Infix version of 'lookup'.
 (!?) :: MSeq a -> Int -> Maybe a
 (!?) = flip lookup
+{-# INLINE (!?) #-}
 
 -- | \(O(\log n)\). Infix version of 'index'. Calls @error@ if the index is out
 -- of bounds.
@@ -476,7 +479,7 @@ index !i = \case
 -- | \(O(\log n)\). Update an element at an index. If the index is out of
 -- bounds, the sequence is returned unchanged.
 update :: Measured a => Int -> a -> MSeq a -> MSeq a
-update i x = adjust (const x) i
+update i x t = adjust (const x) i t
 {-# INLINABLE update #-}
 
 -- | \(O(\log n)\). Adjust the element at an index. If the index is out of
@@ -1008,18 +1011,18 @@ unzipWith3 f t = case t of
 --
 -- @summaryMay == 'foldMap' (Just . 'measure')@
 summaryMay :: Measured a => MSeq a -> Maybe (Measure a)
-summaryMay = \case
+summaryMay t = case t of
   MTree x xs -> Just $! measure x T.<<> xs
   MEmpty -> Nothing
+{-# INLINE summaryMay #-}
 
 -- | \(O(1)\). The summary is the fold of measures of all elements in the
 -- sequence.
 --
 -- @summary == 'foldMap' 'measure'@
 summary :: (Measured a, Monoid (Measure a)) => MSeq a -> Measure a
-summary = \case
-  MTree x xs -> measure x T.<<> xs
-  MEmpty -> mempty
+summary t = fromMaybe mempty (summaryMay t)
+{-# INLINABLE summary #-}
 
 -- | \(O(\log n)\). Perform a binary search on the summaries of the non-empty
 -- prefixes of the sequence.
