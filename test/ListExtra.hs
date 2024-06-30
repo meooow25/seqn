@@ -19,6 +19,9 @@ unsnocL :: [a] -> Maybe ([a], a)
 unsnocL =
   foldr (\x -> Just . maybe ([], x) (\(~(a, b)) -> (x : a, b))) Nothing
 
+sliceL :: (Int, Int) -> [a] -> [a]
+sliceL (l,u) = L.drop l . L.take (u+1)
+
 takeEndL :: Int -> [a] -> [a]
 takeEndL n xs = foldr (\_ k -> k . tail) id (L.drop n xs) xs
 

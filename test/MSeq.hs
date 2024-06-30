@@ -27,7 +27,7 @@ import qualified Test.QuickCheck.Classes.Base as QLaws
 import Data.Seqn.MSeq
 import qualified Data.Seqn.Internal.MSeq as MSeqInternal
 import qualified Data.Seqn.Internal.MTree as MTreeInternal
-import ListExtra (unsnocL)
+import ListExtra (sliceL, unsnocL)
 import qualified ListLikeTests as LL
 import TestUtil ((.:), ListLike(..), Sqrt1(..), tastyLaws)
 
@@ -42,6 +42,35 @@ mseqTests = testGroup "Data.Seqn.MSeq"
         summaryMay xs === foldMap (Just . measure) (F.toList xs)
     , testProperty "summary" $ \(xs :: MSeq D) ->
         summary xs === foldMap measure (F.toList xs)
+    , testProperty "sliceSummaryMay" $ \(xs :: MSeq A) lu ->
+        sliceSummaryMay lu xs ===
+        foldMap (Just . measure) (sliceL lu (F.toList xs))
+    , testProperty "sliceSummary" $ \(xs :: MSeq D) lu ->
+        sliceSummary lu xs ===
+        foldMap measure (sliceL lu (F.toList xs))
+    , testProperty "foldlSliceSummaryComponents mempty (<>) == sliceSummary" $
+        \(xs :: MSeq D) lu ->
+          foldlSliceSummaryComponents (<>) mempty lu xs ===
+          foldMap measure (sliceL lu (F.toList xs))
+    , testProperty "foldlSliceSummaryComponents countLessThanInSlice" $
+        \(xs :: MSeq (MultisetElem Int)) k lu ->
+          let countLessThanInSlice =
+                foldlSliceSummaryComponents
+                  (\z ys -> z + countLessThanMultiset k ys)
+                  0
+          in
+            countLessThanInSlice lu xs ===
+            (length . L.filter ((<k) . unMultisetElem) . sliceL lu . F.toList) xs
+    , testProperty "foldlSliceSummaryComponents O(log n)" $
+        \(xs :: MSeq D) lu@(l,u) ->
+          let res = foldlSliceSummaryComponents (\z _ -> z+1) 0 lu xs
+              d = fromIntegral (max 1 (u-l+2)) :: Double
+              lim = 4 * ceiling (logBase 2 d) :: Integer
+              -- 4*log because 2*log from each side of the root.
+              -- 2*log because subtree root + one child for each level.
+              -- Could find a tighter bound but this is fine for testing.
+          in counterexample ("res=" ++ show res ++ ", lim=" ++ show lim) $
+               res <= lim
     , testProperty "binarySearchPrefix" $ \(xs :: MSeq S) y ->
         let p = (>=y) . getSum
             xs' = F.toList xs
@@ -394,3 +423,17 @@ newtype S = S Word
 instance Measured S where
   type Measure S = Sum Word
   measure (S x) = Sum x
+
+-- Good enough for testing purposes
+newtype Multiset a = Multiset [a]
+  deriving newtype (Eq, Ord, Show, Semigroup)
+
+countLessThanMultiset :: Ord a => a -> Multiset a -> Int
+countLessThanMultiset k (Multiset xs) = length (L.filter (<k) xs)
+
+newtype MultisetElem a = MultisetElem { unMultisetElem :: a }
+  deriving newtype (Eq, Ord, Show, Arbitrary)
+
+instance Measured (MultisetElem a) where
+  type Measure (MultisetElem a) = Multiset a
+  measure (MultisetElem x) = Multiset [x]

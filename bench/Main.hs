@@ -270,6 +270,12 @@ seqBenches = envp seqData $ \_ -> bgroup "Sequence"
     , bench "Sequence" $ whnf (F.foldr (\i z -> rwhnfTup2 (FTSeq.splitAt i bigFTSeq) `seq` z) ()) bigList
     , bench "RRBVector" $ whnf (F.foldr (\i z -> rwhnfTup2 (RRB.splitAt i bigRRB) `seq` z) ()) bigList
     ]
+  , bgroup "slice many"
+    [ bench "Seq" $ whnf (F.foldr (\lu z -> Seq.slice lu bigSeq `seq` z) ()) bigRandomRangeList
+    , bench "MSeq" $ whnf (F.foldr (\lu z -> MSeq.slice lu bigMSeq `seq` z) ()) bigRandomRangeList
+    , bench "Sequence" $ whnf (F.foldr (\(l,u) z -> FTSeq.drop l (FTSeq.take (u+1) bigFTSeq) `seq` z) ()) bigRandomRangeList
+    , bench "RRBVector" $ whnf (F.foldr (\(l,u) z -> RRB.drop l (RRB.take (u+1) bigRRB) `seq` z) ()) bigRandomRangeList
+    ]
   , bgroup "tails"
     [ bench "Seq" $ whnf Seq.tails bigSeq
     , bench "Sequence" $ whnf FTSeq.tails bigFTSeq
@@ -491,6 +497,12 @@ seqBenches = envp seqData $ \_ -> bgroup "Sequence"
   , bgroup "infixIndices all"
     [ bench "Seq" $ nf (Seq.infixIndices (Seq.singleton 0)) big0Seq
     ]
+  , bgroup "sliceSummaryMay"
+    [ bench "MSeq" $ whnf (F.foldr (\lu z -> MSeq.sliceSummaryMay lu bigMSeq `seq` z) ()) bigRandomRangeList
+    ]
+  , bgroup "sliceSummary"
+    [ bench "MSeq" $ whnf (F.foldr (\lu z -> MSeq.sliceSummary lu bigMSeq `seq` z) ()) bigRandomRangeList
+    ]
   , bgroup "binarySearchPrefix"
     [ bench "MSeq" $ whnf (foldr (\ !i z -> MSeq.binarySearchPrefix ((>=i) . getSum) bigMSeqS `seq` z) ()) bigList
     ]
@@ -576,7 +588,9 @@ instance NFData (WHNF a) where
 -------------
 
 seqData =
-  ( bigList
+  ( ( bigList
+    , bigRandomRangeList
+    )
   , ( bigSeq
     , big0Seq
     , bigRandomSeq
@@ -684,11 +698,18 @@ bigRandomList = randomInts bigN
 big0List :: [Int]
 big0List = replicate bigN 0
 
+bigRandomRangeList :: [(Int, Int)]
+bigRandomRangeList = uncurry zip $ splitAt bigN $ randomIntsBounded bigN (2*bigN)
+
 -- LCG
 randomInts :: Int -> [Int]
 randomInts n =
   take n $ L.iterate' (\i -> 0xffffffff .&. (i * 1103515245 + 12345)) n
 {-# INLINE randomInts #-}
+
+randomIntsBounded :: Int -> Int -> [Int]
+randomIntsBounded lim = map (`mod` lim) . randomInts
+{-# INLINE randomIntsBounded #-}
 
 -----------
 -- PQueue

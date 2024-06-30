@@ -5,7 +5,7 @@
 -- An @MSeq@ is
 --
 -- * Spine-strict, hence finite. @MSeq@ cannot represent infinite sequences.
--- * Value-strict. It is guaranteed that if a @MSeq@ is in
+-- * Value-strict. It is guaranteed that if an @MSeq@ is in
 --   [weak head normal form](https://wiki.haskell.org/Weak_head_normal_form)
 --   (WHNF), every element of the @Seq@ is also in WHNF.
 --
@@ -22,10 +22,19 @@
 --
 -- === Warning
 --
--- The length of a @MSeq@ must not exceed @(maxBound \`div\` 3) :: Int@. If this
--- length is exceeded, the behavior of a @MSeq@ is undefined. This value is very
--- large in practice, greater than \(7 \cdot 10^8\) on 32-bit systems and
--- \(3 \cdot 10^{18}\) on 64-bit systems.
+-- The length of an @MSeq@ must not exceed @(maxBound \`div\` 3) :: Int@. If
+-- this length is exceeded, the behavior of an @MSeq@ is undefined. This value
+-- is very large in practice, greater than \(7 \cdot 10^8\) on 32-bit systems
+-- and \(3 \cdot 10^{18}\) on 64-bit systems.
+--
+-- === Note on time complexities
+--
+-- Many functions operating on @MSeq a@ require a @Measured a@ constraint. The
+-- documented time complexities of these functions assume that
+-- @measure :: a -> Measure a@ and
+-- @(<>) :: Measure a -> Measure a -> Measure a@ both take \(O(1)\) time. If
+-- this not the case, the bounds do not hold. Correct bounds can be calculated
+-- by the user depending on their implementations of @measure@ and @(<>)@.
 --
 -- === Implementation
 --
@@ -61,6 +70,9 @@ module Data.Seqn.MSeq
     -- * Measured queries
   , S.summaryMay
   , S.summary
+  , S.sliceSummaryMay
+  , S.sliceSummary
+  , S.foldlSliceSummaryComponents
   , S.binarySearchPrefix
   , S.binarySearchSuffix
 

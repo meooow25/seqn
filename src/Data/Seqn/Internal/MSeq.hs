@@ -114,6 +114,9 @@ module Data.Seqn.Internal.MSeq
     -- * Measured queries
   , summaryMay
   , summary
+  , sliceSummaryMay
+  , sliceSummary
+  , foldlSliceSummaryComponents
   , binarySearchPrefix
   , binarySearchSuffix
 
@@ -1022,6 +1025,117 @@ summaryMay t = case t of
 summary :: (Measured a, Monoid (Measure a)) => MSeq a -> Measure a
 summary t = fromMaybe mempty (summaryMay t)
 {-# INLINABLE summary #-}
+
+-- | \(O(\log n)\). The summary of a slice of the sequence. The slice is
+-- indicated by its bounds (inclusive).
+--
+-- @sliceSummaryMay lu == 'summaryMay' . 'slice' lu@
+sliceSummaryMay :: Measured a => (Int, Int) -> MSeq a -> Maybe (Measure a)
+sliceSummaryMay (!ql, !qu) t = case t of
+  MEmpty -> Nothing
+  MTree x xs
+    | ql > qu || qu < 0 || length t - 1 < ql -> Nothing
+    | otherwise -> Just $! foldlMap1SliceSummaryComponents id (<>) ql qu x xs
+{-# INLINE sliceSummaryMay #-}
+
+-- | \(O(\log n)\). The summary of a slice of the sequence. The slice is
+-- indicated by its bounds (inclusive).
+--
+-- @sliceSummary lu == 'summary' . 'slice' lu@
+sliceSummary
+  :: (Measured a, Monoid (Measure a)) => (Int, Int) -> MSeq a -> Measure a
+sliceSummary lu t = fromMaybe mempty (sliceSummaryMay lu t)
+{-# INLINABLE sliceSummary #-}
+
+-- | Strict left fold over measures covering a slice. These measures are
+-- summaries of \(O(\log n)\) adjacent slices which form the requested slice
+-- when concatenated.
+--
+-- @foldlSliceSummaryComponents (<>) mempty == 'sliceSummary'@
+--
+-- This function is useful when
+--
+-- * Some property of the summary of a slice is desired.
+-- * It is expensive to compute the summary, i.e. @(<>)@ for @Measure a@ is
+--   expensive.
+-- * It is possible, and cheaper, to compute the property given components
+--   of the summary of the slice.
+--
+-- ==== __Examples__
+--
+-- One use case for this is order statistic queries on a slice, such as counting
+-- the number of elements less than some value.
+--
+-- It requires a @Multiset@ structure as outlined below, which can be
+-- implemented using sorted arrays/balanced binary trees.
+--
+-- @
+-- data Multiset a
+-- singleton :: Ord a => a -> MultiSet a -- O(1)
+-- (<>) :: Ord a => Multiset a -> Multiset a -> Multiset a -- O(n1 + n2)
+-- countLessThan :: Ord a => a -> Multiset a -> Int -- O(log n)
+-- @
+--
+-- @
+-- import Data.Seqn.MSeq (Measured, MSeq)
+-- import qualified Data.Seqn.MSeq as MSeq
+--
+-- newtype Elem a = Elem a deriving Show
+--
+-- instance Ord a => Measured (Elem a) where
+--   type Measure (Elem x) = Multiset x
+--   measure (Elem x) = singleton x
+--
+-- -- | O(n log n).
+-- fromList :: Ord a => [a] -> MSeq (Elem a)
+-- fromList = MSeq.fromList
+--
+-- -- | O(log^2 n).
+-- countLessThanInSlice :: Ord a => a -> (Int, Int) -> MSeq (Elem a) -> Int
+-- countLessThanInSlice k =
+--   MSeq.foldlSliceSummaryComponents (\\acc xs -> acc + countLessThan k xs) 0
+-- @
+foldlSliceSummaryComponents
+  :: Measured a => (b -> Measure a -> b) -> b -> (Int, Int) -> MSeq a -> b
+foldlSliceSummaryComponents f !z (!ql, !qu) t = case t of
+  MEmpty -> z
+  MTree x xs
+    | ql > qu || qu < 0 || length t - 1 < ql -> z
+    | otherwise -> foldlMap1SliceSummaryComponents (f z) f ql qu x xs
+{-# INLINE foldlSliceSummaryComponents #-}
+
+-- Precondition: slice (ql, qu) (Tree x0 xs0) is non-empty
+foldlMap1SliceSummaryComponents
+  :: Measured a
+  => (Measure a -> b) -> (b -> Measure a -> b)
+  -> Int -> Int -> a -> MTree a -> b
+foldlMap1SliceSummaryComponents f g !ql !qu x0 xs0
+  | ql <= 0 && 0 <= qu = go (f (measure x0)) 1 xs0
+  | otherwise = go1 1 xs0
+  where
+    go1 !i (MBin sz v y l r)
+      | ql <= i && k <= qu = f v
+      | ql < j && i <= qu =
+          if ql <= j && j <= qu
+          then go (g (go1 i l) (measure y)) (j+1) r
+          else go1 i l
+      | ql <= j && j <= qu = go (f (measure y)) (j+1) r
+      | otherwise = go1 (j+1) r
+      where
+        k = i + sz - 1
+        j = i + T.size l
+    go1 _ MTip = error "MSeq.foldlMap1SliceSummaryComponents: impossible"
+
+    go !z !i (MBin sz v x l r)
+      | qu < i || k < ql = z
+      | ql <= i && k <= qu = g z v
+      | ql <= j && j <= qu = go (g (go z i l) (measure x)) (j+1) r
+      | otherwise = go (go z i l) (j+1) r
+      where
+        k = i + sz - 1
+        j = i + T.size l
+    go z _ MTip = z
+{-# INLINE foldlMap1SliceSummaryComponents #-}
 
 -- | \(O(\log n)\). Perform a binary search on the summaries of the non-empty
 -- prefixes of the sequence.
