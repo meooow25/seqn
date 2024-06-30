@@ -283,7 +283,7 @@ instance Semigroup (Seq a) where
       | c <= 0 -> Empty
       | fromIntegral c * toi (length t) > toi (maxBound :: Int) ->
           error "Seq.stimes: result size too large"
-      | otherwise -> Tree x (stimesLoop (c'-1) x xs xs)
+      | otherwise -> stimesGo x (c'-1) xs xs
       where
         c' = fromIntegral c :: Int
         toi :: Int -> Integer
@@ -296,12 +296,12 @@ instance Semigroup (Seq a) where
 -- Note [Complexity of stimes]
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 --
--- Let stimesLoop be initially called with trees (xs and acc) of size (n-1).
+-- Let stimesGo be initially called with trees (xs and acc) of size (n-1).
 --
--- stimesLoop is called O(log c) times in total, since c halves on every call.
+-- go is called O(log c) times in total, since c halves on every call.
 -- At any iteration, xs is made up of initial tree bin-ed with itself multiple
 -- times, and acc is made up of the some of the xs linked together.
--- All operations in stimesLoop are O(1) except for link, which takes
+-- All operations in go are O(1) except for link, which takes
 -- O(log(size xs) - log(size acc)).
 --
 -- The cost of the ith iteration is O(1) if 2^i is in c.
@@ -318,11 +318,14 @@ instance Semigroup (Seq a) where
 -- = O(p_k - p_1)
 -- = O(\log c)
 
-stimesLoop :: Int -> a -> Tree a -> Tree a -> Tree a
-stimesLoop c !x !xs !acc
-  | c <= 0 = acc
-  | c `mod` 2 == 0 = stimesLoop (c `div` 2) x (T.bin x xs xs) acc
-  | otherwise = stimesLoop (c `div` 2) x (T.bin x xs xs) (T.link x xs acc)
+stimesGo :: a -> Int -> Tree a -> Tree a -> Seq a
+stimesGo !x = go
+  where
+    go c !xs !acc
+      | c <= 0 = Tree x acc
+      | c `mod` 2 == 0 = go (c `div` 2) (T.bin x xs xs) acc
+      | otherwise = go (c `div` 2) (T.bin x xs xs) (T.link x xs acc)
+{-# INLINE stimesGo #-}
 
 -- |
 -- [@mempty@]: The empty sequence.
@@ -475,7 +478,9 @@ fromRevList = rtlFinish . F.foldl' (flip rtlPush) Nil
 -- >>> replicate 3 "ha"
 -- ["ha","ha","ha"]
 replicate :: Int -> a -> Seq a
-replicate !n x = stimes n (Tree x Tip)
+replicate n !x
+  | n <= 0 = Empty
+  | otherwise = stimesGo x (n-1) Tip Tip
 
 -- | \(O(n)\). Generate a sequence from a length and an applicative action.
 -- If the length is negative, 'empty' is returned.
