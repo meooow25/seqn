@@ -291,7 +291,7 @@ instance Measured a => Semigroup (MSeq a) where
       | c <= 0 -> MEmpty
       | fromIntegral c * toi (length t) > toi (maxBound :: Int) ->
           error "MSeq.stimes: result size too large"
-      | otherwise -> MTree x (stimesLoop (c'-1) x xs xs)
+      | otherwise -> stimesGo x (c'-1) xs xs
       where
         c' = fromIntegral c :: Int
         toi :: Int -> Integer
@@ -303,12 +303,14 @@ instance Measured a => Semigroup (MSeq a) where
   sconcat (x:|xs) = mconcat (x:xs)
   {-# INLINABLE sconcat #-}
 
-stimesLoop :: Measured a => Int -> a -> MTree a -> MTree a -> MTree a
-stimesLoop c !x !xs !acc
-  | c <= 0 = acc
-  | c `mod` 2 == 0 = stimesLoop (c `div` 2) x (T.bin x xs xs) acc
-  | otherwise = stimesLoop (c `div` 2) x (T.bin x xs xs) (T.link x xs acc)
-{-# INLINABLE stimesLoop #-}
+stimesGo :: Measured a => a -> Int -> MTree a -> MTree a -> MSeq a
+stimesGo !x = go
+  where
+    go c !xs !acc
+      | c <= 0 = MTree x acc
+      | c `mod` 2 == 0 = go (c `div` 2) (T.bin x xs xs) acc
+      | otherwise = go (c `div` 2) (T.bin x xs xs) (T.link x xs acc)
+{-# INLINE stimesGo #-}
 
 -- |
 -- [@mempty@]: The empty sequence.
@@ -351,7 +353,9 @@ fromRevList = rtlFinish . F.foldl' (flip rtlPush) Nil
 -- | \(O(\log n)\). A sequence with a repeated element.
 -- If the length is negative, 'empty' is returned.
 replicate :: Measured a => Int -> a -> MSeq a
-replicate !n x = stimes n (MTree x MTip)
+replicate n x
+  | n <= 0 = MEmpty
+  | otherwise = stimesGo x (n-1) MTip MTip
 {-# INLINABLE replicate #-}
 
 -- | \(O(n)\). Generate a sequence from a length and an applicative action.
