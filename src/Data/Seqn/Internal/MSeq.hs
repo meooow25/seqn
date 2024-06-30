@@ -353,7 +353,7 @@ fromRevList = rtlFinish . F.foldl' (flip rtlPush) Nil
 -- | \(O(\log n)\). A sequence with a repeated element.
 -- If the length is negative, 'empty' is returned.
 replicate :: Measured a => Int -> a -> MSeq a
-replicate n x
+replicate n !x
   | n <= 0 = MEmpty
   | otherwise = stimesGo x (n-1) MTip MTip
 {-# INLINABLE replicate #-}

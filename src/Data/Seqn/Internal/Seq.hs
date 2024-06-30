@@ -478,7 +478,7 @@ fromRevList = rtlFinish . F.foldl' (flip rtlPush) Nil
 -- >>> replicate 3 "ha"
 -- ["ha","ha","ha"]
 replicate :: Int -> a -> Seq a
-replicate n x
+replicate n !x
   | n <= 0 = Empty
   | otherwise = stimesGo x (n-1) Tip Tip
 
