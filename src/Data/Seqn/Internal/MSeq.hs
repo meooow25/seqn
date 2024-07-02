@@ -729,11 +729,6 @@ breakEnd p = spanEnd (not . p)
 -- ~~~~~~~~~~~~~~~~~~~
 -- MSeq cannot be a Functor because of the Measured constraint on the element
 -- type. So class methods which require Functor are provided as standalone.
---
--- This problem has a decent solution in the form of the Mono* classes from the
--- mono-traversable package. I would use it here if it had not decided to
--- provide instances for all popular packages, giving it a ridiculous dependency
--- footprint of split, unordered-containers, and vector!
 
 -- | \(O(n)\). Map over a sequence.
 map :: Measured b => (a -> b) -> MSeq a -> MSeq b
