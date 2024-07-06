@@ -1083,12 +1083,12 @@ sliceSummary lu t = fromMaybe mempty (sliceSummaryMay lu t)
 -- newtype Elem a = Elem a deriving Show
 --
 -- instance Ord a => Measured (Elem a) where
---   type Measure (Elem x) = Multiset x
+--   type Measure (Elem a) = Multiset a
 --   measure (Elem x) = singleton x
 --
 -- -- | O(n log n).
 -- fromList :: Ord a => [a] -> MSeq (Elem a)
--- fromList = MSeq.fromList
+-- fromList = MSeq.fromList . map Elem
 --
 -- -- | O(log^2 n).
 -- countLessThanInSlice :: Ord a => a -> (Int, Int) -> MSeq (Elem a) -> Int
