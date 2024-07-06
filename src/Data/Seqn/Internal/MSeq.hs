@@ -1155,21 +1155,21 @@ foldlMap1SliceSummaryComponents f g !ql !qu x0 xs0
 -- @
 -- import "Data.Monoid" (Sum(..))
 --
--- newtype A = A Int deriving Show
+-- newtype Elem = E Int deriving Show
 --
--- instance Measured A where
---   type Measure A = Sum Int
---   measure (A x) = Sum x
+-- instance Measured Elem where
+--   type Measure Elem = Sum Int
+--   measure (E x) = Sum x
 -- @
 --
--- >>> let xs = fromList [A 1, A 2, A 3, A 4]
+-- >>> let xs = fromList [E 1, E 2, E 3, E 4]
 --
 -- The summaries of the prefixes of @xs@ by index are:
 --
--- * @0: measure (A 1) = Sum 1@.
--- * @1: measure (A 1) <> measure (A 2) = Sum 3@.
--- * @2: measure (A 1) <> measure (A 2) <> measure (A 3) = Sum 6@.
--- * @3: measure (A 1) <> measure (A 2) <> measure (A 3) <> measure (A 4) = Sum 10@.
+-- * @0: measure (E 1) = Sum 1@.
+-- * @1: measure (E 1) <> measure (E 2) = Sum 3@.
+-- * @2: measure (E 1) <> measure (E 2) <> measure (E 3) = Sum 6@.
+-- * @3: measure (E 1) <> measure (E 2) <> measure (E 3) <> measure (E 4) = Sum 10@.
 --
 -- >>> binarySearchPrefix (> Sum 4) xs
 -- (Just 1,Just 2)
@@ -1239,21 +1239,21 @@ binarySearchPrefix p = \case
 -- @
 -- import "Data.Monoid" (Sum(..))
 --
--- newtype A = A Int deriving Show
+-- newtype Elem = E Int deriving Show
 --
--- instance Measured A where
---   type Measure A = Sum Int
---   measure (A x) = Sum x
+-- instance Measured Elem where
+--   type Measure Elem = Sum Int
+--   measure (E x) = Sum x
 -- @
 --
--- >>> let xs = fromList [A 1, A 2, A 3, A 4]
+-- >>> let xs = fromList [E 1, E 2, E 3, E 4]
 --
 -- The summaries of the suffixes of @xs@ by index are:
 --
--- * @0: measure (A 1) <> measure (A 2) <> measure (A 3) <> measure (A 4) = Sum 10@.
--- * @1: measure (A 2) <> measure (A 3) <> measure (A 4) = Sum 9@.
--- * @2: measure (A 3) <> measure (A 4) = Sum 7@.
--- * @3: measure (A 4) = Sum 4@.
+-- * @0: measure (E 1) <> measure (E 2) <> measure (E 3) <> measure (E 4) = Sum 10@.
+-- * @1: measure (E 2) <> measure (E 3) <> measure (E 4) = Sum 9@.
+-- * @2: measure (E 3) <> measure (E 4) = Sum 7@.
+-- * @3: measure (E 4) = Sum 4@.
 --
 -- >>> binarySearchSuffix (> Sum 4) xs
 -- (Just 2,Just 3)
