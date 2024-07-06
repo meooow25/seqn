@@ -658,8 +658,8 @@ bigMSeq, bigRandomMSeq :: MSeq.MSeq Int
 bigMSeq = MSeq.fromList bigList
 bigRandomMSeq = MSeq.fromList bigRandomList
 
-bigMSeqS :: MSeq.MSeq S
-bigMSeqS = MSeq.fromList (replicate bigN (S 1))
+bigMSeqS :: MSeq.MSeq SumElem
+bigMSeqS = MSeq.fromList (replicate bigN (SumElem 1))
 
 -------------
 -- Sequence
@@ -685,8 +685,8 @@ medRRB = RRB.fromList medList
 bigFT :: FT.FingerTree () Int
 bigFT = FT.fromList bigList
 
-bigFTS :: FT.FingerTree (Sum Int) S
-bigFTS = FT.fromList (replicate bigN (S 1))
+bigFTS :: FT.FingerTree (Sum Int) SumElem
+bigFTS = FT.fromList (replicate bigN (SumElem 1))
 
 -----------
 -- Random
@@ -738,12 +738,12 @@ instance MSeq.Measured Int where
   type Measure Int = ()
   measure _ = ()
 
-newtype S = S Int
+newtype SumElem = SumElem Int
   deriving newtype (Show, NFData)
 
-instance FT.Measured (Sum Int) S where
-  measure (S x) = Sum x
+instance FT.Measured (Sum Int) SumElem where
+  measure (SumElem x) = Sum x
 
-instance MSeq.Measured S where
-  type Measure S = Sum Int
-  measure (S x) = Sum x
+instance MSeq.Measured SumElem where
+  type Measure SumElem = Sum Int
+  measure (SumElem x) = Sum x

@@ -71,7 +71,7 @@ mseqTests = testGroup "Data.Seqn.MSeq"
               -- Could find a tighter bound but this is fine for testing.
           in counterexample ("res=" ++ show res ++ ", lim=" ++ show lim) $
                res <= lim
-    , testProperty "binarySearchPrefix" $ \(xs :: MSeq S) y ->
+    , testProperty "binarySearchPrefix" $ \(xs :: MSeq SumElem) y ->
         let p = (>=y) . getSum
             xs' = F.toList xs
             iws =
@@ -81,7 +81,7 @@ mseqTests = testGroup "Data.Seqn.MSeq"
             lastFalse = snd <$> unsnocL [i | (i,w) <- iws, not (p w)]
             firstTrue = fst <$> L.uncons [i | (i,w) <- iws, p w]
         in binarySearchPrefix p xs === (lastFalse, firstTrue)
-    , testProperty "binarySearchSuffix" $ \(xs :: MSeq S) y ->
+    , testProperty "binarySearchSuffix" $ \(xs :: MSeq SumElem) y ->
         let p = (>=y) . getSum
             xs' = F.toList xs
             iws =
@@ -417,12 +417,12 @@ mkMfix n =
   map (takeL 10)
       (mfix (\ ~(LI is) -> generate n (\i -> LI (fromIntegral i : is))))
 
-newtype S = S Word
+newtype SumElem = SumElem Word
   deriving newtype (Eq, Ord, Show, Arbitrary)
 
-instance Measured S where
-  type Measure S = Sum Word
-  measure (S x) = Sum x
+instance Measured SumElem where
+  type Measure SumElem = Sum Word
+  measure (SumElem x) = Sum x
 
 -- Good enough for testing purposes
 newtype Multiset a = Multiset [a]
