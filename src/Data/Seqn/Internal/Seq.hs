@@ -977,8 +977,8 @@ chunksOf_ c off (Bin sz x l r) = case (lHasSplit, rHasSplit) of
 -- is the result of multiple links of (root, right child) caused by the split
 -- at a chunk boundary, again with total size bounded by c. This takes
 -- O(log c). For an explanation see the description of the finishing step in
--- Note [fromList complexity]. The same applies to the right tree. Hence, each
--- chunk is balanced in O(log c) and to balance all the chunks we need
+-- Note [fromList implementation]. The same applies to the right tree. Hence,
+-- each chunk is balanced in O(log c) and to balance all the chunks we need
 -- O((n/c) log c).
 --
 -- Now the result tree has size ceil(n/c), which needs to be balanced. This is
