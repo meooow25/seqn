@@ -270,6 +270,12 @@ seqBenches = envp seqData $ \_ -> bgroup "Sequence"
     , bench "Sequence" $ whnf (F.foldr (\i z -> rwhnfTup2 (FTSeq.splitAt i bigFTSeq) `seq` z) ()) bigList
     , bench "RRBVector" $ whnf (F.foldr (\i z -> rwhnfTup2 (RRB.splitAt i bigRRB) `seq` z) ()) bigList
     ]
+  , bgroup "slice many"
+    [ bench "Seq" $ whnf (F.foldr (\lu z -> Seq.slice lu bigSeq `seq` z) ()) bigRandomRangeList
+    , bench "MSeq" $ whnf (F.foldr (\lu z -> MSeq.slice lu bigMSeq `seq` z) ()) bigRandomRangeList
+    , bench "Sequence" $ whnf (F.foldr (\(l,u) z -> FTSeq.drop l (FTSeq.take (u+1) bigFTSeq) `seq` z) ()) bigRandomRangeList
+    , bench "RRBVector" $ whnf (F.foldr (\(l,u) z -> RRB.drop l (RRB.take (u+1) bigRRB) `seq` z) ()) bigRandomRangeList
+    ]
   , bgroup "tails"
     [ bench "Seq" $ whnf Seq.tails bigSeq
     , bench "Sequence" $ whnf FTSeq.tails bigFTSeq
@@ -339,19 +345,19 @@ seqBenches = envp seqData $ \_ -> bgroup "Sequence"
     , bench "Sequence" $ whnf (join (*>)) medFTSeq
     , bench "RRBVector" $ whnf (join (*>)) medRRB
     ]
-  , bgroup ">>= 1"
+  , bgroup ">>= A"
     [ bench "Seq" $ whnf (\xs -> xs >>= \_ -> xs) bigSeq
     , bench "MSeq" $ whnf (\xs -> MSeq.concatMap (\_ -> xs) xs) bigMSeq
     , bench "Sequence" $ whnf (\xs -> xs >>= \_ -> xs) bigFTSeq
     , bench "RRBVector" $ whnf (\xs -> xs >>= \_ -> xs) bigRRB
     ]
-  , bgroup ">>= 2"
+  , bgroup ">>= B"
     [ bench "Seq" $ whnf (\xs -> xs >>= \x -> if x `mod` 13 == 0 then bigSeq else pure x) bigSeq
     , bench "MSeq" $ whnf (\xs -> MSeq.concatMap (\x -> if x `mod` 13 == 0 then bigMSeq else MSeq.singleton x) xs) bigMSeq
     , bench "Sequence" $ whnf (\xs -> xs >>= \x -> if x `mod` 13 == 0 then bigFTSeq else pure x) bigFTSeq
     , bench "RRBVector" $ whnf (\xs -> xs >>= \x -> if x `mod` 13 == 0 then bigRRB else pure x) bigRRB
     ]
-  , bgroup ">>= 3"
+  , bgroup ">>= C"
     [ bench "Seq" $ whnf (\xs -> xs >>= \x -> if x `mod` 13 == 0 then pure x else bigSeq) bigSeq
     , bench "MSeq" $ whnf (\xs -> MSeq.concatMap (\x -> if x `mod` 13 == 0 then MSeq.singleton x else bigMSeq) xs) bigMSeq
     , bench "Sequence" $ whnf (\xs -> xs >>= \x -> if x `mod` 13 == 0 then pure x else bigFTSeq) bigFTSeq
@@ -491,6 +497,12 @@ seqBenches = envp seqData $ \_ -> bgroup "Sequence"
   , bgroup "infixIndices all"
     [ bench "Seq" $ nf (Seq.infixIndices (Seq.singleton 0)) big0Seq
     ]
+  , bgroup "sliceSummaryMay"
+    [ bench "MSeq" $ whnf (F.foldr (\lu z -> MSeq.sliceSummaryMay lu bigMSeq `seq` z) ()) bigRandomRangeList
+    ]
+  , bgroup "sliceSummary"
+    [ bench "MSeq" $ whnf (F.foldr (\lu z -> MSeq.sliceSummary lu bigMSeq `seq` z) ()) bigRandomRangeList
+    ]
   , bgroup "binarySearchPrefix"
     [ bench "MSeq" $ whnf (foldr (\ !i z -> MSeq.binarySearchPrefix ((>=i) . getSum) bigMSeqS `seq` z) ()) bigList
     ]
@@ -576,7 +588,9 @@ instance NFData (WHNF a) where
 -------------
 
 seqData =
-  ( bigList
+  ( ( bigList
+    , bigRandomRangeList
+    )
   , ( bigSeq
     , big0Seq
     , bigRandomSeq
@@ -644,8 +658,8 @@ bigMSeq, bigRandomMSeq :: MSeq.MSeq Int
 bigMSeq = MSeq.fromList bigList
 bigRandomMSeq = MSeq.fromList bigRandomList
 
-bigMSeqS :: MSeq.MSeq S
-bigMSeqS = MSeq.fromList (replicate bigN (S 1))
+bigMSeqS :: MSeq.MSeq SumElem
+bigMSeqS = MSeq.fromList (replicate bigN (SumElem 1))
 
 -------------
 -- Sequence
@@ -671,8 +685,8 @@ medRRB = RRB.fromList medList
 bigFT :: FT.FingerTree () Int
 bigFT = FT.fromList bigList
 
-bigFTS :: FT.FingerTree (Sum Int) S
-bigFTS = FT.fromList (replicate bigN (S 1))
+bigFTS :: FT.FingerTree (Sum Int) SumElem
+bigFTS = FT.fromList (replicate bigN (SumElem 1))
 
 -----------
 -- Random
@@ -684,11 +698,18 @@ bigRandomList = randomInts bigN
 big0List :: [Int]
 big0List = replicate bigN 0
 
+bigRandomRangeList :: [(Int, Int)]
+bigRandomRangeList = uncurry zip $ splitAt bigN $ randomIntsBounded bigN (2*bigN)
+
 -- LCG
 randomInts :: Int -> [Int]
 randomInts n =
   take n $ L.iterate' (\i -> 0xffffffff .&. (i * 1103515245 + 12345)) n
 {-# INLINE randomInts #-}
+
+randomIntsBounded :: Int -> Int -> [Int]
+randomIntsBounded lim = map (`mod` lim) . randomInts
+{-# INLINE randomIntsBounded #-}
 
 -----------
 -- PQueue
@@ -717,12 +738,12 @@ instance MSeq.Measured Int where
   type Measure Int = ()
   measure _ = ()
 
-newtype S = S Int
+newtype SumElem = SumElem Int
   deriving newtype (Show, NFData)
 
-instance FT.Measured (Sum Int) S where
-  measure (S x) = Sum x
+instance FT.Measured (Sum Int) SumElem where
+  measure (SumElem x) = Sum x
 
-instance MSeq.Measured S where
-  type Measure S = Sum Int
-  measure (S x) = Sum x
+instance MSeq.Measured SumElem where
+  type Measure SumElem = Sum Int
+  measure (SumElem x) = Sum x

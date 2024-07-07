@@ -279,8 +279,7 @@ drop :: Common t => (Int -> t -> t) -> TestTree
 drop f = testProperty "drop" $ \n xs -> toL (f n xs) === L.drop n (toL xs)
 
 slice :: Common t => ((Int, Int) -> t -> t) -> TestTree
-slice f = testProperty "slice" $ \(i,j) xs ->
-  toL (f (i,j) xs) === L.drop i (L.take (j+1) (toL xs))
+slice f = testProperty "slice" $ \ij xs -> toL (f ij xs) === sliceL ij (toL xs)
 
 splitAt :: Common t => (Int -> t -> (t,t)) -> TestTree
 splitAt f = testProperty "splitAt" $ \n xs ->
