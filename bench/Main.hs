@@ -345,19 +345,19 @@ seqBenches = envp seqData $ \_ -> bgroup "Sequence"
     , bench "Sequence" $ whnf (join (*>)) medFTSeq
     , bench "RRBVector" $ whnf (join (*>)) medRRB
     ]
-  , bgroup ">>= 1"
+  , bgroup ">>= A"
     [ bench "Seq" $ whnf (\xs -> xs >>= \_ -> xs) bigSeq
     , bench "MSeq" $ whnf (\xs -> MSeq.concatMap (\_ -> xs) xs) bigMSeq
     , bench "Sequence" $ whnf (\xs -> xs >>= \_ -> xs) bigFTSeq
     , bench "RRBVector" $ whnf (\xs -> xs >>= \_ -> xs) bigRRB
     ]
-  , bgroup ">>= 2"
+  , bgroup ">>= B"
     [ bench "Seq" $ whnf (\xs -> xs >>= \x -> if x `mod` 13 == 0 then bigSeq else pure x) bigSeq
     , bench "MSeq" $ whnf (\xs -> MSeq.concatMap (\x -> if x `mod` 13 == 0 then bigMSeq else MSeq.singleton x) xs) bigMSeq
     , bench "Sequence" $ whnf (\xs -> xs >>= \x -> if x `mod` 13 == 0 then bigFTSeq else pure x) bigFTSeq
     , bench "RRBVector" $ whnf (\xs -> xs >>= \x -> if x `mod` 13 == 0 then bigRRB else pure x) bigRRB
     ]
-  , bgroup ">>= 3"
+  , bgroup ">>= C"
     [ bench "Seq" $ whnf (\xs -> xs >>= \x -> if x `mod` 13 == 0 then pure x else bigSeq) bigSeq
     , bench "MSeq" $ whnf (\xs -> MSeq.concatMap (\x -> if x `mod` 13 == 0 then MSeq.singleton x else bigMSeq) xs) bigMSeq
     , bench "Sequence" $ whnf (\xs -> xs >>= \x -> if x `mod` 13 == 0 then pure x else bigFTSeq) bigFTSeq

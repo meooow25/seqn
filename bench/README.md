@@ -1,22 +1,28 @@
 ## Comparisons
 
-| Library      | Type                    | Performance              | Spine-strict | Value-strict |
-| ---          | ---                     | ---                      | ---          | ---          |
-| `seqn`       | `Data.Seqn.Seq.Seq`     | Baseline                 | Yes          | Yes          |
-| `containers` | `Data.Sequence.Seq`     | Comparable<sup>[1]</sup> | No           | No           |
-| `rrb-vector` | `Data.RRBVector.Vector` | Comparable<sup>[2]</sup> | Yes          | No           |
+Below are comparisons of `seqn` with some alternatives.
+
+### Sequence
+
+| Library      | Type                    | Spine-strict | Value-strict | Performance              |
+| ---          | ---                     | ---          | ---          | ---                      |
+| `seqn`       | `Data.Seqn.Seq.Seq`     | Yes          | Yes          | Baseline                 |
+| `containers` | `Data.Sequence.Seq`     | No           | No           | Comparable<sup>[1]</sup> |
+| `rrb-vector` | `Data.RRBVector.Vector` | Yes          | No           | Comparable<sup>[2]</sup> |
 
 <sup>1</sup> Has asymptotically better complexity for access at either end  
 <sup>2</sup> Slow at structural changes, but faster otherwise
 
-| Library      | Type                         | Performance        | Spine-strict | Value-strict |
-| ---          | ---                          | ---                | ---          | ---          |
-| `seqn`       | `Data.Seqn.Seq.MSeq`         | Baseline           | Yes          | Yes          |
-| `fingertree` | `Data.FingerTree.FingerTree` | Slow<sup>[3]</sup> | No           | No           |
+### Measured sequence
+
+| Library      | Type                         | Spine-strict | Value-strict | Performance        |
+| ---          | ---                          | ---          | ---          | ---                |
+| `seqn`       | `Data.Seqn.Seq.MSeq`         | Yes          | Yes          | Baseline           |
+| `fingertree` | `Data.FingerTree.FingerTree` | No           | No           | Slow<sup>[3]</sup> |
 
 <sup>3</sup> Has asymptotically better complexity for access at either end
 
-For more details on performance, see benchmarks below.
+For more on performance, see benchmarks below.
 
 ## Benchmarks
 
@@ -89,9 +95,9 @@ imap                  │   41 μs   1x  │   34 μs  0.8x  │   16 ns    0x  
 liftA2                │  206 μs   1x  │  200 μs    1x  │   47 ns    0x  │                │
 <*                    │  129 μs   1x  │                │   26 ns    0x  │   11 ms   84x  │
 *>                    │   74 ns   1x  │                │   28 ns  0.4x  │   10 ms >999x  │
->>= 1                 │  104 μs   1x  │  143 μs  1.4x  │   12 ms  112x  │  199 ms >999x  │
->>= 2                 │  273 μs   1x  │  276 μs    1x  │  489 μs  1.8x  │   55 ms  200x  │
->>= 3                 │  321 μs   1x  │  366 μs  1.1x  │   11 ms   33x  │  165 ms  514x  │
+>>= A                 │  104 μs   1x  │  143 μs  1.4x  │   12 ms  112x  │  199 ms >999x  │
+>>= B                 │  273 μs   1x  │  276 μs    1x  │  489 μs  1.8x  │   55 ms  200x  │
+>>= C                 │  321 μs   1x  │  366 μs  1.1x  │   11 ms   33x  │  165 ms  514x  │
 filter                │   57 μs   1x  │   56 μs    1x  │  114 μs    2x  │                │
 mapMaybe              │   56 μs   1x  │   55 μs    1x  │                │                │
 mapEither             │  221 μs   1x  │  187 μs  0.8x  │                │                │
