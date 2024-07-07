@@ -878,15 +878,18 @@ inits t0 = snoc (U.evalSState (forwards (Tr.traverse f t0)) t0) t0
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- tails :: Seq a -> Seq (Seq a)
 --
--- There are many ways to implement tails (and inits), with different
--- <WHNF, WHNF for ith tail>:
+-- There are multiple ways to implement tails (and inits):
 --
--- 1. (Generate or imap) with drop                 : <O(n), O(log n)>
--- 2. Send down a stack and rebuild                : <O(n), O(log n)>
--- 3. (Unfold, replicateA or traverse) with uncons : <O(n log n), O(n log n)>
+-- 1. imap (or generate) with drop
+-- 2. Send down a stack and rebuild
+-- 3. traverse (or unfold or replicateA) with uncons
 --
--- We do 3 for because it is faster in benchmarks. It cannot be done lazily,
--- unlike 1 and 2, but that is fine because Seq is value-strict.
+-- We do 3 with traverse because it is seen to be faster in benchmarks. Note
+-- that in 3 a tail requires all previous tails to be calculated, while this is
+-- not true for 1 and 2. But Seqn is value-strict, so it's not like we lose an
+-- opportunity to be lazy. If a user wants arbitrary tails, they can use drop
+-- which is not too bad. 3 takes ~17% less time compared to 1, according to the
+-- "tails" benchmark.
 
 
 -- | \(O \left(\frac{n}{c} \log c \right)\). Split a sequence into chunks of the
