@@ -179,13 +179,14 @@ import qualified Data.Seqn.Internal.MSeq as S
 -- $tutorial
 --
 -- @MSeq@, like @Seq@, is a sequence which supports operations like @lookup@,
--- @splitAt@, @(<>)@, @foldr@, and more. What makes it different is that it
--- maintains \"measure\"s of the elements in it. Every element in the sequence
--- has an associated measure. The type of this measure must have a @Semigroup@
--- instance. An @MSeq@ allows accessing the combined measure of all its elements
--- in \(O(1)\) time.
+-- @splitAt@, @(<>)@, @foldr@, and more.
 --
--- == Example: Sum
+-- Additionally, every element in an @MSeq@ has an associated \"measure\".
+-- Such measures can be combined using a @Semigroup@ instance. An @MSeq@ allows
+-- accessing the combined measure of all its elements in \(O(1)\) time. The
+-- choice of the measure depends on the use case.
+--
+-- == Example 1: Sum
 --
 -- @
 -- data Task = Task
@@ -203,7 +204,7 @@ import qualified Data.Seqn.Internal.MSeq as S
 -- if the sum has to be calculated frequently. In the latter case, we could use
 -- an @MSeq@.
 --
--- We begin with some imports.
+-- First, some imports.
 --
 -- @
 -- import Data.Seqn.MSeq (Measured, MSeq)
@@ -300,10 +301,10 @@ import qualified Data.Seqn.Internal.MSeq as S
 -- >>> splitAtMost 10 tasks
 -- Nothing
 --
--- Note that the running time of @splitAtMost@ is simply \(O(\log n)\), and not
--- dependent on how many tasks are split out.
+-- The running time of @splitAtMost@ is simply \(O(\log n)\), and it does not
+-- depend on how many tasks are split out.
 --
--- == More information
+-- == More uses
 --
 -- More uses of measured sequences can be found in the paper on finger trees:
 --
