@@ -10,7 +10,7 @@ Below are comparisons of `seqn` with some alternatives.
 | `containers` | `Data.Sequence.Seq`     | No           | No           | Comparable<sup>[1]</sup> |
 | `rrb-vector` | `Data.RRBVector.Vector` | Yes          | No           | Comparable<sup>[2]</sup> |
 
-<sup>1</sup> Has asymptotically better complexity for access at either end  
+<sup>1</sup> Has asymptotically better complexity for access at either end
 <sup>2</sup> Slow at structural changes, but faster otherwise
 
 ### Measured sequence
@@ -122,8 +122,8 @@ unzipWith nf          │  242 μs   1x  │  143 μs  0.6x  │  484 μs    2x 
 mconcat               │  128 μs   1x  │                │  212 μs  1.6x  │   13 ms  105x  │
 binarySearchFind      │  395 μs   1x  │  395 μs    1x  │                │                │
 isPrefixOf            │  120 μs   1x  │  131 μs  1.1x  │                │                │
-infixIndices full     │  206 μs   1x  │                │                │                │
-infixIndices all      │  173 μs   1x  │                │                │                │
+infixIndices full     │  198 μs   1x  │  195 μs    1x  │                │                │
+infixIndices all      │  166 μs   1x  │  164 μs    1x  │                │                │
 sliceSummaryMay       │               │  586 μs    1x  │                │                │
 sliceSummary          │               │  604 μs    1x  │                │                │
 binarySearchPrefix    │               │  400 μs    1x  │                │                │

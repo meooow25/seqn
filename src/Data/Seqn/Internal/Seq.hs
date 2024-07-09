@@ -1303,16 +1303,17 @@ infixIndices :: Eq a => Seq a -> Seq a -> [Int]
 infixIndices t1 t2
   | null t1 = [0 .. length t2]
   | compareLength t1 t2 == GT = []
-  | otherwise = X.build $ \lcons lnil ->
+  | otherwise =
     let n1 = length t1
         t1a = infixIndicesMkArray n1 t1
-        !(!mt, !mt0) = KMP.build t1a
-        f !i x k = \ !m -> case KMP.step mt m x of
-          (b,m') ->
-            if b
-            then lcons (i-n1+1) (k m')
-            else k m'
-    in IFo.ifoldr f (\ !_ -> lnil) t2 mt0
+        !(!mt, !m0) = KMP.build t1a
+    in X.build $ \lcons lnil ->
+         let f !i x k !m = case KMP.step mt m x of
+               (b,m') ->
+                 if b
+                 then lcons (i-n1+1) (k m')
+                 else k m'
+         in IFo.ifoldr f (\ !_ -> lnil) t2 m0
 {-# INLINE infixIndices #-} -- Inline for fusion
 
 infixIndicesMkArray :: Int -> Seq a -> A.Array a
@@ -1382,7 +1383,7 @@ isSuffixOf t1 t2 =
 -- >>> fromList [2,4] `isInfixOf` fromList [2,3,4]
 -- False
 isInfixOf :: Eq a => Seq a -> Seq a -> Bool
-isInfixOf t1 t2 = not (null (infixIndices t1 t2))
+isInfixOf t1 t2 = foldr (\_ _ -> True) False (infixIndices t1 t2)
 {-# INLINABLE isInfixOf #-}
 
 -- | \(O(n_1 + n_2)\). Whether the first sequence is a subsequence of the

@@ -493,9 +493,11 @@ seqBenches = envp seqData $ \_ -> bgroup "Sequence"
     ]
   , bgroup "infixIndices full"
     [ bench "Seq" $ nf (join Seq.infixIndices) bigSeq
+    , bench "MSeq" $ nf (join Seq.infixIndices) bigSeq
     ]
   , bgroup "infixIndices all"
     [ bench "Seq" $ nf (Seq.infixIndices (Seq.singleton 0)) big0Seq
+    , bench "MSeq" $ nf (MSeq.infixIndices (MSeq.singleton 0)) big0MSeq
     ]
   , bgroup "sliceSummaryMay"
     [ bench "MSeq" $ whnf (F.foldr (\lu z -> MSeq.sliceSummaryMay lu bigMSeq `seq` z) ()) bigRandomRangeList
@@ -597,6 +599,7 @@ seqData =
     , medSeq
     )
   , ( bigMSeq
+    , big0MSeq
     , bigRandomMSeq
     , bigMSeqS
     )
@@ -656,6 +659,7 @@ medSeq = Seq.fromList medList
 
 bigMSeq, bigRandomMSeq :: MSeq.MSeq Int
 bigMSeq = MSeq.fromList bigList
+big0MSeq = MSeq.fromList big0List
 bigRandomMSeq = MSeq.fromList bigRandomList
 
 bigMSeqS :: MSeq.MSeq SumElem
