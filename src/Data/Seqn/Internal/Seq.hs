@@ -1183,7 +1183,8 @@ intersperse y (Tree x xs) = case T.unsnoc (go xs) of
   U.SNothing -> error "Seq.intersperse: impossible"
   U.SJust (U.S2 xs' _) -> Tree x xs'
   where
-    go T.Tip = T.Bin 1 y T.Tip T.Tip
+    yt = T.Bin 1 y T.Tip T.Tip
+    go T.Tip = yt
     go (T.Bin sz z l r) = T.Bin (sz*2+1) z (go l) (go r)
     -- No need to balance, x <= 3y => 2x+1 <= 3(2y+1)
 intersperse _ Empty = Empty

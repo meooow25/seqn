@@ -790,7 +790,8 @@ intersperse y (MTree x xs) = case T.unsnoc (go xs) of
   U.SNothing -> error "intersperse: impossible"
   U.SJust (U.S2 xs' _) -> MTree x xs'
   where
-    go T.MTip = T.singleton y
+    yt = T.singleton y
+    go T.MTip = yt
     go (T.MBin sz _ z l r) = T.binn (sz*2+1) z (go l) (go r)
     -- No need to balance, x <= 3y => 2x+1 <= 3(2y+1)
 intersperse _ MEmpty = MEmpty
