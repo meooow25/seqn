@@ -1032,6 +1032,8 @@ summary t = fromMaybe mempty (summaryMay t)
 -- indicated by its bounds (inclusive).
 --
 -- @sliceSummaryMay lu == 'summaryMay' . 'slice' lu@
+--
+-- @since 0.1.1.0
 sliceSummaryMay :: Measured a => (Int, Int) -> MSeq a -> Maybe (Measure a)
 sliceSummaryMay (!ql, !qu) t = case t of
   MEmpty -> Nothing
@@ -1044,6 +1046,8 @@ sliceSummaryMay (!ql, !qu) t = case t of
 -- indicated by its bounds (inclusive).
 --
 -- @sliceSummary lu == 'summary' . 'slice' lu@
+--
+-- @since 0.1.1.0
 sliceSummary
   :: (Measured a, Monoid (Measure a)) => (Int, Int) -> MSeq a -> Measure a
 sliceSummary lu t = fromMaybe mempty (sliceSummaryMay lu t)
@@ -1097,6 +1101,8 @@ sliceSummary lu t = fromMaybe mempty (sliceSummaryMay lu t)
 -- countLessThanInSlice k =
 --   MSeq.foldlSliceSummaryComponents (\\acc xs -> acc + countLessThan k xs) 0
 -- @
+--
+-- @since 0.1.1.0
 foldlSliceSummaryComponents
   :: Measured a => (b -> Measure a -> b) -> b -> (Int, Int) -> MSeq a -> b
 foldlSliceSummaryComponents f !z (!ql, !qu) t = case t of
